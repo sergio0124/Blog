@@ -1,4 +1,4 @@
-package reznikov.sergey.blog.business_logic.controller;
+package reznikov.sergey.blog.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class HelloController {
 
-    @GetMapping("/")
+    @GetMapping("/hello")
     public ResponseEntity<Object> sayHello() {
         return ResponseEntity.ok("<html>\n" +
                 "<head>\n" +

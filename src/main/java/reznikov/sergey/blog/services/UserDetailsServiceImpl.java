@@ -10,8 +10,11 @@ import reznikov.sergey.blog.repositories.UserRepository;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
     UserRepository userRepo;
+
+    public UserDetailsServiceImpl(@Autowired UserRepository userRepo) {
+        this.userRepo = userRepo;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
