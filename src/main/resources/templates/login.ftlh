@@ -18,7 +18,7 @@
 </div>
 <p>Registration <a href="/registration"> here</a></p>
 
-<form action="/login" method="post">
+<form action="/authenticateUser" method="post">
     <div><label> User Name : <input type="text" name="username"/> </label></div>
     <div><label> Password: <input type="password" name="password"/> </label></div>
     <div><input type="submit" value="sign In"/></div>
