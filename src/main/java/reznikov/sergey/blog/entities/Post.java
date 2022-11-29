@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "post")
@@ -36,27 +37,8 @@ public class Post {
     @Column(nullable = false)
     private String text;
 
-    @Lob
-    private byte[] titleImage;
-
-//    public BufferedImage getTitleImage() throws IOException {
-//        if (titleImage == null || titleImage.length == 0) {
-//            return null;
-//        }
-//        ImageToBlobConverter converter = new ImageToBlobConverter();
-//        return converter.getImage(titleImage);
-//    }
-
-    public String getTitleImage() {
-        if (titleImage == null || titleImage.length == 0) {
-            return null;
-        }
-        ImageToBlobConverter converter = new ImageToBlobConverter();
-        return converter.getStringImage(titleImage);
-    }
-
-    public void setTitleImage(BufferedImage titleImage) throws IOException {
-        ImageToBlobConverter converter = new ImageToBlobConverter();
-        this.titleImage = converter.setImage(titleImage);
-    }
+    @OneToMany(mappedBy = "post",
+            fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL)
+    private Set<PostImage> postImageSet;
 }

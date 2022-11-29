@@ -1,5 +1,6 @@
 package reznikov.sergey.blog.controllers;
 
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,25 +41,20 @@ public class CreatorController {
         var data = postRepository.findPostsByUser_IdOrderByDateDesc(curUser.getId(), pageable);
         List<Post> posts = data.toList();
 
+        @Data
         class ShowPost {
             final String title;
             final String description;
-            final String image;
             final Long id;
+            final Date date;
 
-            public ShowPost(String title, String description, String image, Long id) {
-                this.title = title;
-                this.description = description;
-                this.image = image;
-                this.id = id;
-            }
         }
 
         var postData = new ArrayList<ShowPost>();
         posts.forEach(rec -> postData.add(new ShowPost(rec.getTitle(),
                 rec.getDescription(),
-                rec.getTitleImage(),
-                rec.getId())));
+                rec.getId(),
+                rec.getDate())));
 
         map.put("posts", postData);
 
@@ -66,4 +62,8 @@ public class CreatorController {
         return modelAndView;
     }
 
+    @GetMapping("/new")
+    ModelAndView creatorNewPage(){
+
+    }
 }
