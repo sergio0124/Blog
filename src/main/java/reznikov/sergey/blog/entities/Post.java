@@ -1,6 +1,7 @@
 package reznikov.sergey.blog.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import reznikov.sergey.blog.logic.ImageToBlobConverter;
@@ -15,6 +16,7 @@ import java.util.Set;
 @Entity
 @Table(name = "post")
 @Data
+@EqualsAndHashCode(exclude = "user")
 public class Post {
 
     @Id

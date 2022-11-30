@@ -1,6 +1,5 @@
 package reznikov.sergey.blog.controllers;
 
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -9,10 +8,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import reznikov.sergey.blog.controllers.request_bodies.NewPost;
+import reznikov.sergey.blog.controllers.request_bodies.FullPost;
+import reznikov.sergey.blog.controllers.request_bodies.ShowPost;
 import reznikov.sergey.blog.entities.Post;
 import reznikov.sergey.blog.entities.PostImage;
 import reznikov.sergey.blog.entities.User;
+import reznikov.sergey.blog.repositories.PostImageRepository;
 import reznikov.sergey.blog.repositories.PostRepository;
 
 import java.util.*;
@@ -24,9 +25,12 @@ public class CreatorController {
     int PAGE_SIZE = 5;
 
     PostRepository postRepository;
+    PostImageRepository postImageRepository;
 
-    public CreatorController(@Autowired PostRepository postRepository) {
+    public CreatorController(@Autowired PostRepository postRepository,
+                             @Autowired PostImageRepository postImageRepository) {
         this.postRepository = postRepository;
+        this.postImageRepository = postImageRepository;
     }
 
     @GetMapping("/")
@@ -41,21 +45,11 @@ public class CreatorController {
         var data = postRepository.findPostsByUser_IdOrderByDateDesc(curUser.getId(), pageable);
         List<Post> posts = data.toList();
 
-        @Data
-        class ShowPost {
-            final String title;
-            final String description;
-            final Long id;
-            final Date date;
-
-        }
-
         var postData = new ArrayList<ShowPost>();
         posts.forEach(rec -> postData.add(new ShowPost(rec.getTitle(),
                 rec.getDescription(),
                 rec.getId(),
                 rec.getDate())));
-
         map.put("posts", postData);
 
         modelAndView.addAllObjects(map);
@@ -63,31 +57,55 @@ public class CreatorController {
     }
 
 
-
-    @PostMapping("/create_new")
-    ResponseEntity<Object> creatorNewPage(@RequestBody NewPost newPost,
-                                  @AuthenticationPrincipal User curuser){
+    @PostMapping("/work_on_post")
+    ResponseEntity<Object> creatorNewPage(@RequestBody FullPost newPost,
+                                          @AuthenticationPrincipal User curUser) {
         Post post = new Post();
         post.setDescription(newPost.getDescription());
         post.setText(newPost.getText());
-        post.setUser(curuser);
+        post.setUser(curUser);
         post.setTitle(newPost.getTitle());
 
-        Set<PostImage> postImageSet = new HashSet<>();
-        newPost.getPostImages().forEach(rec->{
+        var createdPost = postRepository.save(post);
+        newPost.getPostImages().forEach(rec -> {
             PostImage img = new PostImage();
             img.setImage(rec.getBytes());
+            img.setPost(createdPost);
+            postImageRepository.save(img);
         });
-        post.setPostImageSet(postImageSet);
-
-        postRepository.save(post);
         return ResponseEntity.ok("Ok");
     }
 
-    @GetMapping("/create_new")
-    ModelAndView getCreatePage(){
+    @GetMapping("/work_on_post")
+    ModelAndView getCreatePage(@RequestParam(required = false) Integer id) {
+        if (id == null) {
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("post_work_window");
+            return modelAndView;
+        }
+
+        FullPost fullPost = createByPost(postRepository.getReferenceById(id.longValue()));
+        Map<String, Object> map = new HashMap<>();
+
+        map.put("post", fullPost);
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("new");
+        modelAndView.addAllObjects(map);
         return modelAndView;
+    }
+
+    private FullPost createByPost(Post post) {
+        FullPost fullPost = new FullPost();
+        fullPost.setDescription(post.getDescription());
+        fullPost.setText(post.getText());
+        fullPost.setTitle(post.getTitle());
+
+        var postsInBase64 = new ArrayList<String>();
+        for (var img : post.getPostImageSet()
+        ) {
+            postsInBase64.add("data:image/png;base64," +
+                    Base64.getEncoder().encodeToString(img.getImage()));
+        }
+        fullPost.setPostImages(postsInBase64);
+        return fullPost;
     }
 }

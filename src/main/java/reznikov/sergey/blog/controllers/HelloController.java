@@ -13,19 +13,19 @@ public class HelloController {
 
     @GetMapping("/hello")
     public ModelAndView sayHello(@AuthenticationPrincipal User curUser) {
-        if(curUser==null){
+        if (curUser == null) {
             return new ModelAndView("redirect:/login");
         }
 
         ModelAndView modelAndView = new ModelAndView();
         var roles = curUser.getRoles();
-        if(roles.contains(Role.MainAdmin)){
+        if (roles.contains(Role.MainAdmin)) {
 
-        } else if (roles.contains(Role.Admin)){
+        } else if (roles.contains(Role.Admin)) {
 
-        } else if (roles.contains(Role.Creator)){
-            modelAndView.setViewName("creator_home");
-        } else if (roles.contains(Role.User)){
+        } else if (roles.contains(Role.Creator)) {
+            modelAndView.setViewName("redirect:creator/");
+        } else if (roles.contains(Role.User)) {
 
         }
 

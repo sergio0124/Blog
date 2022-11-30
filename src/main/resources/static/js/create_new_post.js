@@ -1,4 +1,6 @@
-image_container = document.getElementById("image_container")
+image_container = document.getElementById("image_container");
+save_button = document.getElementById("save_button");
+image_load = document.getElementById("image_load");
 
 function http_post(theUrl, inputData) {
     let xmlHttp = new XMLHttpRequest();
@@ -8,7 +10,7 @@ function http_post(theUrl, inputData) {
     return [xmlHttp.responseText, xmlHttp.status];
 }
 
-function load_image(event) {
+image_load.addEventListener("change", function (event) {
     let selectedFile = event.target.files[0];
     let reader = new FileReader();
 
@@ -31,14 +33,14 @@ function load_image(event) {
     image_container.appendChild(private_cont);
 
     reader.readAsDataURL(selectedFile);
-}
+});
 
 function delete_image(node) {
     let parent = node.parents(".img_cont")
     parent.parentNode.removeChild(parent);
 }
 
-function save_data() {
+save_button.addEventListener("click", function () {
     let title = document.getElementById("title");
     let description = document.getElementById("description");
     let text = document.getElementById("text");
@@ -67,7 +69,7 @@ function save_data() {
     };
     let json = JSON.stringify(data);
 
-    http_post("/creator/new", data);
-}
+    http_post("/creator/create_new", data);
+});
 
 

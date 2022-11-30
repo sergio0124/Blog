@@ -1,6 +1,7 @@
 package reznikov.sergey.blog.entities;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -42,7 +43,7 @@ public class User implements UserDetails {
     private boolean nonLocked = true;
 
     @OneToMany(mappedBy = "user",
-            cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+            cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<Post> posts = new HashSet<>();
 
     @Override

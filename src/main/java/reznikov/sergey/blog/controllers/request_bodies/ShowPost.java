@@ -1,16 +1,16 @@
 package reznikov.sergey.blog.controllers.request_bodies;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Date;
-import java.util.List;
 
 @Data
-public class NewPost{
+@AllArgsConstructor
+public
+class ShowPost {
     String title;
     String description;
-    Date date = new Date();
-    String text;
-    List<String> postImages;
-
+    Long id;
+    Date date;
 }
