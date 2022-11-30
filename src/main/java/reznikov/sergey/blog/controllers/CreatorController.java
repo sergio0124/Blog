@@ -4,17 +4,17 @@ import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import reznikov.sergey.blog.controllers.request_bodies.NewPost;
 import reznikov.sergey.blog.entities.Post;
+import reznikov.sergey.blog.entities.PostImage;
 import reznikov.sergey.blog.entities.User;
 import reznikov.sergey.blog.repositories.PostRepository;
 
-import java.awt.image.BufferedImage;
 import java.util.*;
 
 @Controller
@@ -62,8 +62,32 @@ public class CreatorController {
         return modelAndView;
     }
 
-    @GetMapping("/new")
-    ModelAndView creatorNewPage(){
 
+
+    @PostMapping("/create_new")
+    ResponseEntity<Object> creatorNewPage(@RequestBody NewPost newPost,
+                                  @AuthenticationPrincipal User curuser){
+        Post post = new Post();
+        post.setDescription(newPost.getDescription());
+        post.setText(newPost.getText());
+        post.setUser(curuser);
+        post.setTitle(newPost.getTitle());
+
+        Set<PostImage> postImageSet = new HashSet<>();
+        newPost.getPostImages().forEach(rec->{
+            PostImage img = new PostImage();
+            img.setImage(rec.getBytes());
+        });
+        post.setPostImageSet(postImageSet);
+
+        postRepository.save(post);
+        return ResponseEntity.ok("Ok");
+    }
+
+    @GetMapping("/create_new")
+    ModelAndView getCreatePage(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("new");
+        return modelAndView;
     }
 }

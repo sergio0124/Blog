@@ -13,6 +13,10 @@ public class HelloController {
 
     @GetMapping("/hello")
     public ModelAndView sayHello(@AuthenticationPrincipal User curUser) {
+        if(curUser==null){
+            return new ModelAndView("redirect:/login");
+        }
+
         ModelAndView modelAndView = new ModelAndView();
         var roles = curUser.getRoles();
         if(roles.contains(Role.MainAdmin)){

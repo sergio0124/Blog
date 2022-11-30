@@ -24,18 +24,4 @@ public class PostImage {
     @Column(nullable = false)
     private byte[] image;
 
-
-    public String getTitleImage() {
-        if (image == null || image.length == 0) {
-            return null;
-        }
-        ImageToBlobConverter converter = new ImageToBlobConverter();
-        return converter.getStringImage(image);
-    }
-
-    public void setTitleImage(BufferedImage titleImage) throws IOException {
-        ImageToBlobConverter converter = new ImageToBlobConverter();
-        this.image = converter.setImage(titleImage);
-    }
-
 }
