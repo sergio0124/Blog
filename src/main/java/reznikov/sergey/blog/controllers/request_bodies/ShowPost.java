@@ -7,10 +7,11 @@ import java.util.Date;
 
 @Data
 @AllArgsConstructor
-public
-class ShowPost {
+public class ShowPost {
+    String creator_name;
     String title;
     String description;
     Long id;
     Date date;
+
 }

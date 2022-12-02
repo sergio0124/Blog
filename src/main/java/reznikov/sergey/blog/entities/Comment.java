@@ -23,7 +23,7 @@ public class Comment {
 
     @ManyToOne
     @JoinColumn(name="user_id")
-    Post user;
+    User user;
 
     @CreatedDate
     Timestamp creationDate = new Timestamp(new Date().getTime());

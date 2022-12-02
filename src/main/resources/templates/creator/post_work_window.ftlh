@@ -9,7 +9,7 @@
 <div>
 
     <#if post??>
-        <div>${post.id}</div>
+        <div id="post_id" style="display: none">${post.id}</div>
     </#if>
 
     <div>

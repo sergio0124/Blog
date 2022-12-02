@@ -20,7 +20,7 @@ public class Report {
 
     @ManyToOne
     @JoinColumn(name="user_id")
-    Post user;
+    User user;
 
     @Enumerated(EnumType.STRING)
     ReportType reportType;

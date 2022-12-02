@@ -2,6 +2,7 @@ package reznikov.sergey.blog.entities;
 
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
+
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -40,4 +41,5 @@ public class Post {
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     Set<Report> reports;
+
 }

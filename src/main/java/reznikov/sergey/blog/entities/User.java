@@ -56,6 +56,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     Set<Report> reports;
 
+    @OneToMany(mappedBy = "subscriber", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    Set<Subscribe> subscribes;
+
+    @OneToMany(mappedBy = "influencer", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    Set<Subscribe> influencers;
+
 
 
 

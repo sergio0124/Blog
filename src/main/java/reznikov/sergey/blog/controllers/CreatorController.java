@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -38,18 +37,18 @@ public class CreatorController {
 
     @GetMapping("/")
     ModelAndView creatorMainPage(@RequestParam(value = "page", required = false) Optional<Integer> pageNumber,
-                                 @AuthenticationPrincipal User curUser) {
+                                 @RequestParam(value = "userid") Long userId) {
         ModelAndView modelAndView = new ModelAndView();
         Map<String, Object> map = new HashMap<>();
-        modelAndView.setViewName("creator_home");
-        int page = pageNumber.orElse(0);
+        modelAndView.setViewName("creator_home_page");
 
+        int page = pageNumber.orElse(0);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
-        var data = postRepository.findPostsByUser_IdOrderByDateDesc(curUser.getId(), pageable);
+        var data = postRepository.findPostsByUser_IdOrderByDateDesc(userId, pageable);
         List<Post> posts = data.toList();
 
         var postData = new ArrayList<ShowPost>();
-        posts.forEach(rec -> postData.add(new ShowPost(rec.getTitle(),
+        posts.forEach(rec -> postData.add(new ShowPost(null, rec.getTitle(),
                 rec.getDescription(),
                 rec.getId(),
                 rec.getDate())));
@@ -60,38 +59,58 @@ public class CreatorController {
     }
 
 
-    @PostMapping("/work_on_post")
-    ResponseEntity<Object> creatorNewPage(@RequestBody FullPost newPost/*,
-                                          @AuthenticationPrincipal User curUser*/) {
-        Post post = new Post();
-        post.setDescription(newPost.getDescription());
-        post.setText(newPost.getText());
-        post.setUser(userRepository.findById(newPost.getUser_id()).orElse(null));
-        post.setTitle(newPost.getTitle());
-
-        var createdPost = postRepository.save(post);
-        newPost.getPostImages().forEach(rec -> {
-            PostImage img = new PostImage();
-            img.setImage(rec.getBytes());
-            img.setPost(createdPost);
-            postImageRepository.save(img);
-        });
-        return ResponseEntity.ok("Ok");
+    @DeleteMapping("/delete_post")
+    ResponseEntity<Object> delete_post(@RequestParam("postid") Long postId,
+                                       @RequestParam("userid") Long userId) {
+        Post post = postRepository.findPostById(postId).orElse(null);
+        if (post == null) {
+            return ResponseEntity.badRequest().body("Пост с таким id не найден или у вас нет прав доступа");
+        } else {
+            postRepository.delete(post);
+            return ResponseEntity.ok("Пост удалён");
+        }
     }
 
+
+    @PostMapping("/save_post")
+    ResponseEntity<Object> creatorNewPage(@RequestBody FullPost fullPost) {
+        User user = userRepository.findById(fullPost.getUserId()).orElse(null);
+        if (user == null) {
+            return ResponseEntity.badRequest().body("Создатель с таким id не найден в базе");
+        }
+        Post post;
+        if (fullPost.getPostId() == null) {
+            post = new Post();
+        } else {
+            post = postRepository.findPostById(fullPost.getPostId()).orElse(null);
+            if (post == null) {
+                return ResponseEntity.badRequest().body("Пост с заданным id не найден");
+            }
+        }
+
+        post.setDescription(fullPost.getDescription());
+        post.setText(fullPost.getText());
+        post.setUser(user);
+        post.setTitle(fullPost.getTitle());
+        postRepository.save(post);
+
+        return ResponseEntity.ok("Изменения сохранены в базе данных");
+    }
+
+
+
     @GetMapping("/work_on_post")
-    ModelAndView getCreatePage(@RequestParam(required = false) Integer id) {
-        if (id == null) {
-            ModelAndView modelAndView = new ModelAndView();
-            modelAndView.setViewName("post_work_window");
+    ModelAndView getCreatePage(@RequestParam(required = false) Long postId) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("post_work_window");
+        if (postId == null) {
             return modelAndView;
         }
 
-        FullPost fullPost = createByPost(postRepository.getReferenceById(id.longValue()));
+        FullPost fullPost = createByPost(postRepository.getReferenceById(postId));
         Map<String, Object> map = new HashMap<>();
 
         map.put("post", fullPost);
-        ModelAndView modelAndView = new ModelAndView();
         modelAndView.addAllObjects(map);
         return modelAndView;
     }
@@ -102,13 +121,6 @@ public class CreatorController {
         fullPost.setText(post.getText());
         fullPost.setTitle(post.getTitle());
 
-        var postsInBase64 = new ArrayList<String>();
-        for (var img : post.getPostImageSet()
-        ) {
-            postsInBase64.add("data:image/png;base64," +
-                    Base64.getEncoder().encodeToString(img.getImage()));
-        }
-        fullPost.setPostImages(postsInBase64);
         return fullPost;
     }
 }

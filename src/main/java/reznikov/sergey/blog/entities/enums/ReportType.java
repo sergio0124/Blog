@@ -10,7 +10,7 @@ public enum ReportType {
     FAKE,
     OTHER;
 
-    public String getInRussian(ReportType type) {
+    public static String getInRussian(ReportType type) {
         switch (type) {
             case RACISM:
                 return "Расизм";
@@ -31,7 +31,7 @@ public enum ReportType {
     }
 
 
-    public ReportType fromRussian(String string){
+    public static ReportType fromRussian(String string){
         switch (string) {
             case "Расизм":
                 return RACISM;
