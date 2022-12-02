@@ -11,10 +11,10 @@ import org.springframework.web.servlet.ModelAndView;
 import reznikov.sergey.blog.controllers.request_bodies.FullPost;
 import reznikov.sergey.blog.controllers.request_bodies.ShowPost;
 import reznikov.sergey.blog.entities.Post;
-import reznikov.sergey.blog.entities.PostImage;
 import reznikov.sergey.blog.entities.User;
 import reznikov.sergey.blog.repositories.PostImageRepository;
 import reznikov.sergey.blog.repositories.PostRepository;
+import reznikov.sergey.blog.repositories.UserRepository;
 
 import java.util.*;
 
@@ -26,11 +26,14 @@ public class CreatorController {
 
     PostRepository postRepository;
     PostImageRepository postImageRepository;
+    UserRepository userRepository;
 
     public CreatorController(@Autowired PostRepository postRepository,
-                             @Autowired PostImageRepository postImageRepository) {
+                             @Autowired PostImageRepository postImageRepository,
+                             @Autowired UserRepository userRepository) {
         this.postRepository = postRepository;
         this.postImageRepository = postImageRepository;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/")
@@ -58,12 +61,12 @@ public class CreatorController {
 
 
     @PostMapping("/work_on_post")
-    ResponseEntity<Object> creatorNewPage(@RequestBody FullPost newPost,
-                                          @AuthenticationPrincipal User curUser) {
+    ResponseEntity<Object> creatorNewPage(@RequestBody FullPost newPost/*,
+                                          @AuthenticationPrincipal User curUser*/) {
         Post post = new Post();
         post.setDescription(newPost.getDescription());
         post.setText(newPost.getText());
-        post.setUser(curUser);
+        post.setUser(userRepository.findById(newPost.getUser_id()).orElse(null));
         post.setTitle(newPost.getTitle());
 
         var createdPost = postRepository.save(post);

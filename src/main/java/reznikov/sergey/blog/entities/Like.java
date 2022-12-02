@@ -5,18 +5,20 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "post_image")
+@Table(name = "like")
 @Data
-public class PostImage {
+public class Like {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    Long Id;
 
     @ManyToOne
-    @JoinColumn(name = "post")
+    @JoinColumn(name = "post_id")
     Post post;
 
-    @Lob
-    byte[] image;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    Post user;
+
 }

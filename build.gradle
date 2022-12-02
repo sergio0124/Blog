@@ -20,7 +20,8 @@ dependencies {
     implementation "org.springframework.boot:spring-boot-starter-security"
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-    implementation 'org.postgresql:postgresql:42.4.1'
+    implementation 'com.mysql:mysql-connector-j:8.0.31'
+
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
 }

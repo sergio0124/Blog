@@ -67,6 +67,7 @@
             }
             json = JSON.stringify(data);
             http_post("/authenticateUser", json);
+            document.location.href = "/hello"
         }
 
         message.innerHTML = text;

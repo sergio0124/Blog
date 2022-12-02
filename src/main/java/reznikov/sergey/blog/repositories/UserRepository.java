@@ -14,5 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Boolean existsByUsername(String username);
     List<User> findUsersByUsernameContainsIgnoreCase(String loginPart);
 
+    Optional<User> findUserById(Long id);
+
 //    User saveUser(User entity);
 }

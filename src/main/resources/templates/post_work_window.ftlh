@@ -134,7 +134,7 @@
         };
         let json = JSON.stringify(data);
 
-        http_post("/creator/create_new", json);
+        http_post("/creator/work_on_post", json);
     });
 </script>
 

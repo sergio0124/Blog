@@ -1,12 +1,12 @@
-package reznikov.sergey.blog.entities;
+package reznikov.sergey.blog.entities.enums;
 
 import org.springframework.security.core.GrantedAuthority;
 
 public enum Role implements GrantedAuthority {
-    User,
-    Creator,
-    Admin,
-    MainAdmin;
+    USER,
+    CREATOR,
+    ADMIN,
+    MAIN_ADMIN;
 
     @Override
     public String getAuthority() {

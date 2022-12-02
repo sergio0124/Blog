@@ -7,6 +7,7 @@ import java.util.List;
 
 @Data
 public class FullPost {
+    Long user_id;
     String title;
     String description;
     Date date = new Date();

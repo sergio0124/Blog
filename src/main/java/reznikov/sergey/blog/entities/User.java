@@ -1,12 +1,12 @@
 package reznikov.sergey.blog.entities;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import reznikov.sergey.blog.entities.enums.Role;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -25,18 +25,19 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
     @Column(nullable = false)
     private String password;
 
     @CreatedDate
-    private Timestamp registrationDate;
+    private Timestamp registrationDate = new Timestamp(new Date().getTime());
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_role",
             joinColumns = @JoinColumn(name = "user_id"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @Enumerated(EnumType.STRING)
     private Set<Role> roles = new HashSet<>();
 
@@ -45,6 +46,18 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user",
             cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<Post> posts = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    Set<Comment> comments;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    Set<Like> likes;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    Set<Report> reports;
+
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

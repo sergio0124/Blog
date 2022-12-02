@@ -1,14 +1,8 @@
 package reznikov.sergey.blog.entities;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import org.hibernate.annotations.CreationTimestamp;
-import org.springframework.data.annotation.CreatedDate;
-import reznikov.sergey.blog.logic.ImageToBlobConverter;
-
 import javax.persistence.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
@@ -16,7 +10,6 @@ import java.util.Set;
 @Entity
 @Table(name = "post")
 @Data
-@EqualsAndHashCode(exclude = "user")
 public class Post {
 
     @Id
@@ -24,7 +17,7 @@ public class Post {
     private Long Id;
 
     @CreationTimestamp
-    private Timestamp date;
+    private Timestamp date = new Timestamp(new Date().getTime());
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
@@ -39,8 +32,12 @@ public class Post {
     @Column(nullable = false)
     private String text;
 
-    @OneToMany(mappedBy = "post",
-            fetch = FetchType.EAGER,
-            cascade = CascadeType.ALL)
-    private Set<PostImage> postImageSet;
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    Set<Comment> comments;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    Set<Like> likes;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    Set<Report> reports;
 }
