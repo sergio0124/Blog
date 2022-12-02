@@ -15,7 +15,7 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long Id;
+    private Long id;
 
     @CreationTimestamp
     private Timestamp date = new Timestamp(new Date().getTime());

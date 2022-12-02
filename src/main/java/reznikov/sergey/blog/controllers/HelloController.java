@@ -24,7 +24,7 @@ public class HelloController {
 
         } else if (roles.contains(Role.CREATOR)) {
             modelAndView.setViewName("redirect:creator/");
-        } else if (roles.contains(Role.User)) {
+        } else if (roles.contains(Role.USER)) {
 
         }
 

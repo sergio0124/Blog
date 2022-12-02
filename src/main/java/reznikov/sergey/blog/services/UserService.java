@@ -19,13 +19,12 @@ public class UserService {
     }
 
 
-    public boolean registerUser(User user) throws Exception {
+    public void registerUser(User user) throws Exception {
         if (userRepo.existsByUsername(user.getUsername())) {
             throw new Exception("Данный пользователь уже существует");
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepo.save(user);
-        return true;
     }
 }
 

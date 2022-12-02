@@ -63,7 +63,7 @@ public class UserController {
         int page = pageNumber.orElse(0);
         PageRequest pageRequest =
                 PageRequest.of(page, PAGE_SIZE, Sort.by("date").descending());
-        var subscribes = subscribeRepository.findSubscribesByUser(user);
+        var subscribes = subscribeRepository.findSubscribesBySubscriber(user);
 
         var posts = postRepository.findPostByUserIn(
                 subscribes

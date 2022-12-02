@@ -42,7 +42,7 @@ public class MainAdminController {
         int page = pageNumber.orElse(0);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         var admins = userRepository
-                .findUsersByRoles(new HashSet<>(List.of(Role.ADMIN)), pageable)
+                .findUsersByRoles_NameIn(List.of(Role.ADMIN.name()), pageable)
                 .getContent();
 
         map.put("admins", admins
@@ -63,8 +63,8 @@ public class MainAdminController {
         int page = pageNumber.orElse(0);
         PageRequest pageRequest =
                 PageRequest.of(page, PAGE_SIZE);
-        var users = userRepository.findUsersByRolesAndUsernameContainingIgnoreCase(
-                new HashSet<>(List.of(Role.ADMIN)), searchRequest, pageRequest).toList();
+        var users = userRepository.findUsersByRoles_NameInAndUsernameContainingIgnoreCase(
+                List.of(Role.ADMIN.name()), searchRequest, pageRequest).toList();
 
         map.put("admins", users
                 .stream()
