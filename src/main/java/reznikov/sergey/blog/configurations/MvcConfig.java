@@ -14,9 +14,11 @@ public class MvcConfig implements WebMvcConfigurer {
         registry.addRedirectViewController("/", "/hello");
     }
 
+
     @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/resources/**")
-                .addResourceLocations("/resources/");
+    public void addResourceHandlers(ResourceHandlerRegistry registry){
+        registry.addResourceHandler("/static/**")
+                .addResourceLocations("classpath:/static/");
     }
+
 }

@@ -10,10 +10,7 @@ import reznikov.sergey.blog.entities.enums.Role;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 
 @Entity
@@ -43,8 +40,8 @@ public class User implements UserDetails {
     private boolean nonLocked = true;
 
     @OneToMany(mappedBy = "user",
-            cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-    private Set<Post> posts = new HashSet<>();
+            cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
     Set<Comment> comments;

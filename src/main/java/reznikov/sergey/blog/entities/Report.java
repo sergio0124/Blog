@@ -8,11 +8,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "report")
 @Data
-public class Report {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long Id;
+public class Report extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name="post_id")

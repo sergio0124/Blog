@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import reznikov.sergey.blog.controllers.request_bodies.FullPost;
 import reznikov.sergey.blog.controllers.request_bodies.ShowPost;
 import reznikov.sergey.blog.entities.Post;
+import reznikov.sergey.blog.entities.PostImage;
 import reznikov.sergey.blog.entities.User;
 import reznikov.sergey.blog.repositories.PostImageRepository;
 import reznikov.sergey.blog.repositories.PostRepository;
@@ -92,7 +93,15 @@ public class CreatorController {
         post.setText(fullPost.getText());
         post.setUser(user);
         post.setTitle(fullPost.getTitle());
-        postRepository.save(post);
+        post = postRepository.save(post);
+
+        for (var image:fullPost.getPostImages()
+             ) {
+            PostImage postImage = new PostImage();
+            postImage.setPost(post);
+            postImage.setImage(image.getBytes());
+            postImageRepository.save(postImage);
+        }
 
         return ResponseEntity.ok("Изменения сохранены в базе данных");
     }

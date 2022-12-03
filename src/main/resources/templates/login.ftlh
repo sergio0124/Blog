@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Log in</title>
+    <script type="text/javascript" src="static/alert.js"></script>
 </head>
 <body>
 

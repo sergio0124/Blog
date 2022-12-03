@@ -7,11 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "post_image")
 @Data
-public class PostImage {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+public class PostImage extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "post")
