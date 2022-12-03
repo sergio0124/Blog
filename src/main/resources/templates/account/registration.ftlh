@@ -25,14 +25,14 @@
 
 <div id="response_message"></div>
 
-</body>
 
+</body>
 <script language="JavaScript">
-    submit = document.getElementById("registration_submit")
-    username = document.getElementById("registration_username")
-    password = document.getElementById("registration_password")
-    select = document.getElementById("registration_option")
-    message = document.getElementById("response_message")
+    submit = document.getElementById("registration_submit");
+    username = document.getElementById("registration_username");
+    password = document.getElementById("registration_password");
+    select = document.getElementById("registration_option");
+    message = document.getElementById("response_message");
 
 
     function http_post(theUrl, inputData) {
@@ -45,6 +45,7 @@
 
 
     submit.addEventListener('click', function () {
+
         let type = select.value;
         let pass = password.value;
         let name = username.value;
@@ -67,12 +68,14 @@
             }
             json = JSON.stringify(data);
             http_post("/authenticateUser", json);
-            document.location.href = "/hello"
+            document.location.href = "/login"
         }
 
         message.innerHTML = text;
 
     });
+</script>
+
 </script>
 
 </html>

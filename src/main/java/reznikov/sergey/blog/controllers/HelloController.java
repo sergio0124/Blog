@@ -10,7 +10,7 @@ import reznikov.sergey.blog.entities.User;
 @Controller
 public class HelloController {
 
-    @GetMapping("/hello")
+    @GetMapping("/")
     public ModelAndView sayHello(@AuthenticationPrincipal User curUser) {
         if (curUser == null) {
             return new ModelAndView("redirect:/login");

@@ -17,7 +17,7 @@ public class MappingUser {
     }
 
     //из entity в dto
-    public UserDTO mapToAppointmentDto(User user) {
+    public UserDTO mapToUserDto(User user) {
         if (user == null) {
             return null;
         }
@@ -29,7 +29,7 @@ public class MappingUser {
     }
 
     //из dto в entity
-    public User mapToAppointmentEntity(UserDTO dto) {
+    public User mapToUserEntity(UserDTO dto) {
         var user = modelMapper.map(dto, User.class);
         user.setRoles(dto.getRoles().stream().map(Role::valueOf).collect(Collectors.toSet()));
         return user;

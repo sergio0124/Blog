@@ -18,7 +18,7 @@ public class MappingComment {
     }
 
     //из entity в dto
-    public CommentDTO mapToAppointmentDto(Comment comment){
+    public CommentDTO mapToCommentDto(Comment comment){
         if(comment==null){
             return null;
         }
@@ -35,7 +35,7 @@ public class MappingComment {
     }
 
     //из dto в entity
-    public Comment mapToAppointmentEntity(CommentDTO dto){
+    public Comment mapToCommentEntity(CommentDTO dto){
 
         return modelMapper.map(dto, Comment.class);
     }

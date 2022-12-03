@@ -19,16 +19,4 @@ public class UserDTO extends BaseEntityDTO {
     private Set<String> roles;
 
     private boolean nonLocked = true;
-
-    private List<Post> posts;
-
-    private List<Comment> comments;
-
-    private List<Like> likes;
-
-    private List<Report> reports;
-
-    private List<Subscribe> subscribes;
-
-    private List<Subscribe> influencers;
 }

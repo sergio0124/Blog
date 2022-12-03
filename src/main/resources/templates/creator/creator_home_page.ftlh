@@ -2,12 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Главная страница редактора</title>
-
-    <script language="JavaScript">
-        function go_create(id) {
-            document.location.href = "/creator/work_on_post?id=" + id;
-        }
-    </script>
+    <script type="text/javascript" src="static/alert.js"></script>
 </head>
 <body>
 
@@ -42,6 +37,12 @@
             </div>
         </#list>
     </#if>
+
+    <div>
+        <button></button>
+        <button>${page}</button>
+        <button></button>
+    </div>
 
 </div>
 
