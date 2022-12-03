@@ -16,7 +16,7 @@ public class RegistrationController {
 
     UserService userRepository;
 
-    public RegistrationController(@Autowired UserService userRepository) {
+    public RegistrationController(UserService userRepository) {
         this.userRepository = userRepository;
     }
 

@@ -28,9 +28,9 @@ public class CreatorController {
     PostImageRepository postImageRepository;
     UserRepository userRepository;
 
-    public CreatorController(@Autowired PostRepository postRepository,
-                             @Autowired PostImageRepository postImageRepository,
-                             @Autowired UserRepository userRepository) {
+    public CreatorController(PostRepository postRepository,
+                             PostImageRepository postImageRepository,
+                             UserRepository userRepository) {
         this.postRepository = postRepository;
         this.postImageRepository = postImageRepository;
         this.userRepository = userRepository;
@@ -95,8 +95,8 @@ public class CreatorController {
         post.setTitle(fullPost.getTitle());
         post = postRepository.save(post);
 
-        for (var image:fullPost.getPostImages()
-             ) {
+        for (var image : fullPost.getPostImages()
+        ) {
             PostImage postImage = new PostImage();
             postImage.setPost(post);
             postImage.setImage(image.getBytes());
@@ -105,7 +105,6 @@ public class CreatorController {
 
         return ResponseEntity.ok("Изменения сохранены в базе данных");
     }
-
 
 
     @GetMapping("/work_on_post")

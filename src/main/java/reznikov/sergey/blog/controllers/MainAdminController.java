@@ -25,8 +25,8 @@ public class MainAdminController {
     UserRepository userRepository;
     UserService userService;
 
-    public MainAdminController(@Autowired UserRepository userRepository,
-                               @Autowired UserService userService) {
+    public MainAdminController(UserRepository userRepository,
+                               UserService userService) {
         this.userRepository = userRepository;
         this.userService = userService;
     }

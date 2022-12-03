@@ -16,11 +16,7 @@ import java.util.*;
 @Entity
 @Table(name = "usr")
 @Data
-public class User implements UserDetails {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -44,19 +40,19 @@ public class User implements UserDetails {
     private List<Post> posts = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    Set<Comment> comments;
+    List<Comment> comments;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    Set<Like> likes;
+    List<Like> likes;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    Set<Report> reports;
+    List<Report> reports;
 
     @OneToMany(mappedBy = "subscriber", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    Set<Subscribe> subscribes;
+    List<Subscribe> subscribes;
 
     @OneToMany(mappedBy = "influencer", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    Set<Subscribe> influencers;
+    List<Subscribe> influencers;
 
 
 

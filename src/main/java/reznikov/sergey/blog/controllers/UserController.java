@@ -37,12 +37,12 @@ public class UserController {
     ReportRepository reportRepository;
 
 
-    public UserController(@Autowired UserRepository userRepository,
-                          @Autowired SubscribeRepository subscribeRepository,
-                          @Autowired PostRepository postRepository,
-                          @Autowired LikeRepository likeRepository,
-                          @Autowired CommentRepository commentRepository,
-                          @Autowired ReportRepository reportRepository) {
+    public UserController(UserRepository userRepository,
+                          SubscribeRepository subscribeRepository,
+                          PostRepository postRepository,
+                          LikeRepository likeRepository,
+                          CommentRepository commentRepository,
+                          ReportRepository reportRepository) {
         this.userRepository = userRepository;
         this.subscribeRepository = subscribeRepository;
         this.postRepository = postRepository;

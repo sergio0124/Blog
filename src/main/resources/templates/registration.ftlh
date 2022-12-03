@@ -17,8 +17,8 @@
 <div><label> Пароль: <input type="password" id="registration_password"/> </label></div>
 
 <select id="registration_option">
-    <option value="Creator">Создавать контент</option>
-    <option value="User">Читать контент</option>
+    <option value="CREATOR">Создавать контент</option>
+    <option value="USER">Читать контент</option>
 </select>
 
 <div><input type="button" id="registration_submit" value="Регистрация"/></div>

@@ -7,11 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "lke")
 @Data
-public class Like {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long Id;
+public class Like extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "post_id")
@@ -19,6 +15,6 @@ public class Like {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    Post user;
+    User user;
 
 }

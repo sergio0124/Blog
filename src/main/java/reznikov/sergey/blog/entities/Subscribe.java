@@ -7,11 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "subscribe")
 @Data
-public class Subscribe {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long Id;
+public class Subscribe extends BaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "subscriber")

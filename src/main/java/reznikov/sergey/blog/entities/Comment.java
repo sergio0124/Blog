@@ -1,7 +1,6 @@
 package reznikov.sergey.blog.entities;
 
 import lombok.Data;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -11,11 +10,7 @@ import java.util.Date;
 @Entity
 @Table(name = "comment")
 @Data
-public class Comment {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long Id;
+public class Comment extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name="post_id")
