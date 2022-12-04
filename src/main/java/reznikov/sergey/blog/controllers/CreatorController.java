@@ -29,7 +29,7 @@ public class CreatorController {
         this.mappingUser = mappingUser;
     }
 
-    @GetMapping("/")
+    @GetMapping
     String creatorMainPage(@RequestParam(value = "page", required = false) Optional<Integer> pageNumber,
                            @AuthenticationPrincipal User user,
                            HashMap<String, Object> model) {
@@ -39,6 +39,7 @@ public class CreatorController {
         List<PostDTO> posts = postService.findPostsByUser(mappingUser.mapToUserDto(user), pageable);
         model.put("posts", posts);
         model.put("page", page);
+        model.put("user", mappingUser.mapToUserDto(user));
 
         return "creator/creator_home_page";
     }

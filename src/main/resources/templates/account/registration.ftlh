@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Log in</title>
+    <script src="static/js/alert.js"></script>
 </head>
 <body>
 

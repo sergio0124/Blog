@@ -28,12 +28,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/registration", "/login").anonymous()
                 .antMatchers("/**").authenticated()
+                .antMatchers("/static/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/login")
+                .formLogin()
+                .loginPage("/login")
                 .loginProcessingUrl("/authenticateUser")
                 .and()
                 .logout();
+    }
+
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring()
+                .antMatchers("/static/**", "/assets/**", "/css/**", "/js/**");
     }
 
 
