@@ -1,5 +1,6 @@
 package reznikov.sergey.blog.services;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -11,6 +12,7 @@ import reznikov.sergey.blog.mappings.MappingUser;
 import reznikov.sergey.blog.repositories.UserRepository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -39,16 +41,18 @@ public class UserService implements UserDetailsService {
         userRepo.save(user);
     }
 
-    public void updateUser(UserDTO userDTO) throws Exception{
+    public void updateUser(UserDTO userDTO) throws Exception {
         User user = userRepo.findUserById(userDTO.getId()).orElse(null);
-        if(user==null){
+        if (user == null) {
             throw new Exception("Пользователь с таким id не найден");
         }
-
-        if(userDTO.getPassword()!=null){
-            user.setPassword(userDTO.getPassword());
+        if (!bCryptPasswordEncoder.matches(userDTO.getOldPassword(), user.getPassword())) {
+            throw new Exception("Введен неверный старый пароль");
         }
-        else if (userDTO.getUsername()!=null){
+
+        if (userDTO.getPassword() != null) {
+            user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
+        } else if (userDTO.getUsername() != null) {
             user.setUsername(userDTO.getUsername());
         }
 

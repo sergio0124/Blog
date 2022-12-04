@@ -2,14 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Главная страница редактора</title>
-    <script src="open_user_info.js"></script>
     <script src="pages.js"></script>
+    <script src="refactor_post.js"></script>
 </head>
 <body>
 
 <div>
     <div>Пользователь ${user.username}</div>
-    <button onclick="document.location.href = '/user/info'">Информация об аккаунте</button>
+    <button onclick="document.location.href = '/info'">Информация об аккаунте</button>
 </div>
 
 <div>
@@ -23,7 +23,7 @@
 
     <#if posts??>
         <#list posts as post>
-            <div onclick="go_create(${post.id})">
+            <div>
 
                 <div>
                     <label>Название ${post.title}</label>
@@ -36,6 +36,14 @@
                 <div>
                     <label>Описание: ${post.description}</label>
                 </div>
+
+                <button onclick="go_refactor(${post.id})">
+                    Изменить пост
+                </button>
+
+                <button onclick="delete_post(${post.id}, this)">
+                    Удалить пост
+                </button>
 
             </div>
         </#list>

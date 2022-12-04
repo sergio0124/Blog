@@ -1,88 +1,133 @@
 package reznikov.sergey.blog.controllers;
 
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+import reznikov.sergey.blog.DTO.PostDTO;
+import reznikov.sergey.blog.DTO.SubscribeDTO;
+import reznikov.sergey.blog.DTO.UserDTO;
 import reznikov.sergey.blog.entities.User;
 import reznikov.sergey.blog.mappings.MappingUser;
-import reznikov.sergey.blog.services.UserService;
+import reznikov.sergey.blog.services.*;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
+@PreAuthorize("hasAnyAuthority('USER')")
 @Controller
 @RequestMapping("/user")
 public class UserController {
     int PAGE_SIZE = 5;
     int COMMENTS_PER_PAGE = 10;
 
-
     UserService userService;
     MappingUser mappingUser;
+    SubscribeService subscribeService;
+    PostService postService;
+    LikeService likeService;
+    CommentService commentService;
 
-    public UserController(UserService userService, MappingUser mappingUser) {
+    public UserController(UserService userService,
+                          MappingUser mappingUser, SubscribeService subscribeService,
+                          PostService postService, LikeService likeService,
+                          CommentService commentService) {
         this.userService = userService;
         this.mappingUser = mappingUser;
+        this.subscribeService = subscribeService;
+        this.postService = postService;
+        this.likeService = likeService;
+        this.commentService = commentService;
     }
 
-    @GetMapping("/info")
-    String getUserInfo(@AuthenticationPrincipal User user,
-                       HashMap<String, Object> model){
-        model.put("user", mappingUser.mapToUserDto(user));
-        return "account/user_info_page";
+    @GetMapping
+    String getHomePage(@RequestParam(value = "page", required = false) Optional<Integer> pageNumber,
+                       @AuthenticationPrincipal User user,
+                       HashMap<String, Object> model) throws Exception {
+
+        int page = pageNumber.orElse(0);
+        PageRequest pageRequest =
+                PageRequest.of(page, PAGE_SIZE, Sort.by("date").descending());
+
+        List<SubscribeDTO> subscribeDTOList = subscribeService.getUsersSubscribes(mappingUser.mapToUserDto(user));
+
+        List<PostDTO> posts = postService
+                .getPostsBySubscribesByPages(subscribeDTOList, pageRequest);
+
+        model.put("posts", posts);
+        return "user/user_home_page";
     }
 
-//    @GetMapping("/")
-//    ModelAndView getHomePage(@RequestParam("userid") Long userId,
-//                             @RequestParam(value = "page", required = false) Optional<Integer> pageNumber) {
-//        ModelAndView modelAndView = new ModelAndView();
-//        Map<String, Object> map = new HashMap<>();
-//        modelAndView.setViewName("user_home_page");
-//
-//        User user = userRepository.findUserById(userId).orElse(null);
-//        int page = pageNumber.orElse(0);
-//        PageRequest pageRequest =
-//                PageRequest.of(page, PAGE_SIZE, Sort.by("date").descending());
-//        var subscribes = subscribeRepository.findSubscribesBySubscriber(user);
-//
-//        var posts = postRepository.findPostByUserIn(
-//                subscribes
-//                        .stream()
-//                        .map(Subscribe::getInfluencer)
-//                        .collect(Collectors.toList()),
-//                pageRequest);
-//
-//        map.put("posts", posts.stream().map(this::getShowPost).collect(Collectors.toList()));
-//        modelAndView.addAllObjects(map);
-//        return modelAndView;
-//    }
-//
-//    private ShowPost getShowPost(Post post) {
-//        return new ShowPost(post.getUser().getUsername(),
-//                post.getTitle(),
-//                post.getDescription(),
-//                post.getId(),
-//                post.getDate());
-//    }
-//
-//
-//    @GetMapping("/search")
-//    ModelAndView getSearchPage(@RequestParam("string") String searchRequest,
-//                               @RequestParam(value = "page", required = false) Optional<Integer> pageNumber) {
-//        ModelAndView modelAndView = new ModelAndView();
-//        Map<String, Object> map = new HashMap<>();
-//        modelAndView.setViewName("user_search_page");
-//
-//        int page = pageNumber.orElse(0);
-//        PageRequest pageRequest =
-//                PageRequest.of(page, PAGE_SIZE);
-//        var posts = postRepository.findPostsByTitleContainingIgnoreCase(searchRequest, pageRequest).toList();
-//
-//        map.put("posts", posts.stream().map(this::getShowPost).collect(Collectors.toList()));
-//        modelAndView.addAllObjects(map);
-//        return modelAndView;
-//    }
-//
+
+    @GetMapping("/search")
+    String getSearchPage(@RequestParam("string") String searchRequest,
+                         @RequestParam(value = "page", required = false) Optional<Integer> pageNumber,
+                         HashMap<String, Object> model) {
+
+        int page = pageNumber.orElse(0);
+        PageRequest pageRequest =
+                PageRequest.of(page, PAGE_SIZE);
+
+        List<PostDTO> posts = postService.searchPostsByTitle(searchRequest, pageRequest);
+
+        model.put("posts", posts);
+        return "user/user_search_page";
+    }
+
+
+    @GetMapping("/read_post")
+    String readPost(@RequestParam("postId") Long postId,
+                    @AuthenticationPrincipal User user,
+                    HashMap<String, Object> model) throws Exception {
+
+        UserDTO userDTO = mappingUser.mapToUserDto(user);
+        PostDTO postDTO = postService.findPostById(postId);
+        if (postDTO == null) {
+            return "user/user_search_page";
+        }
+
+        postDTO.setLikes(Math.toIntExact(likeService.getPostLikesCount(postDTO)));
+
+        PageRequest pageRequest =
+                PageRequest.of(0, COMMENTS_PER_PAGE);
+        var comments = commentService.getCommentsByPostByPage(postDTO, pageRequest);
+        postDTO.setComments(comments);
+
+        model.put("liked", likeService.isPostLiked(postDTO, userDTO));
+        model.put("post", postDTO);
+        return "user/user_search_page";
+    }
+
+
+    @PostMapping("/load_comments")
+    ResponseEntity<Object> getMoreComments(@RequestBody Integer page,
+                                           @RequestBody Long postId) throws Exception {
+        PostDTO postDTO = new PostDTO();
+        postDTO.setId(postId);
+        PageRequest pageRequest =
+                PageRequest.of(page, COMMENTS_PER_PAGE);
+        var comments = commentService.getCommentsByPostByPage(postDTO, pageRequest);
+        return ResponseEntity.ok(comments);
+    }
+
+
+    @PostMapping("/like")
+    ResponseEntity<Object> updateLike(
+            @RequestBody PostDTO postDTO,
+            @AuthenticationPrincipal User user) {
+        try {
+            likeService.likeOrUnlike(postDTO, user);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.ok("Выполнено успешно");
+    }
+
+
 //    @PostMapping("/subscribe")
 //    ResponseEntity<Object> subscribe(HttpServletRequest request) {
 //
@@ -105,45 +150,6 @@ public class UserController {
 //        return ResponseEntity.ok("Подписка оформлена");
 //    }
 //
-//    @GetMapping("/read_post")
-//    ModelAndView readPost(@RequestParam("postid") Long postId) {
-//        ModelAndView modelAndView = new ModelAndView();
-//        Map<String, Object> map = new HashMap<>();
-//        modelAndView.setViewName("user_search_page");
-//
-//        if (postId == null) {
-//            return modelAndView;
-//        }
-//
-//        Post post = postRepository.findPostById(postId).orElse(null);
-//        if (post == null) {
-//            return modelAndView;
-//        }
-//        FullPost fullPost = createByPost(post);
-//        fullPost.setLikesCount(likeRepository.countByPost(post));
-//        map.put("post", fullPost);
-//
-//        PageRequest pageRequest =
-//                PageRequest.of(0, COMMENTS_PER_PAGE);
-//        var comments = commentRepository.findCommentsByPost(post, pageRequest).toList();
-//        map.put("comments", comments
-//                .stream()
-//                .map(rec -> new ShowPostComment(rec.getUser().getUsername(), rec.getText()))
-//                .collect(Collectors.toList())
-//        );
-//
-//        modelAndView.addAllObjects(map);
-//        return modelAndView;
-//    }
-//
-//    private FullPost createByPost(Post post) {
-//        FullPost fullPost = new FullPost();
-//        fullPost.setDescription(post.getDescription());
-//        fullPost.setText(post.getText());
-//        fullPost.setTitle(post.getTitle());
-//
-//        return fullPost;
-//    }
 //
 //
 //    @PostMapping("/create_comment")

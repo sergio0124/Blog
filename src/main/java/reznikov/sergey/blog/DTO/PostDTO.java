@@ -21,7 +21,7 @@ public class PostDTO extends BaseEntityDTO {
 
     List<CommentDTO> comments = new ArrayList<>();
 
-    List<LikeDTO> likes = new ArrayList<>();
+    private int likes;
 
     List<ReportDTO> reports = new ArrayList<>();
 

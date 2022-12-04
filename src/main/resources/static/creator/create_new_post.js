@@ -1,7 +1,3 @@
-image_container = document.getElementById("image_container");
-save_button = document.getElementById("save_button");
-image_load = document.getElementById("image_load");
-
 function http_post(theUrl, inputData) {
     let xmlHttp = new XMLHttpRequest();
     xmlHttp.open("POST", theUrl, false);
@@ -10,10 +6,11 @@ function http_post(theUrl, inputData) {
     return [xmlHttp.responseText, xmlHttp.status];
 }
 
-image_load.addEventListener("change", function (event) {
+function load_image(event) {
     let selectedFile = event.target.files[0];
     let reader = new FileReader();
 
+    let image_container = document.getElementById("image_container");
     let private_cont = document.createElement("div");
     private_cont.setAttribute("class", "img_cont");
 
@@ -33,43 +30,58 @@ image_load.addEventListener("change", function (event) {
     image_container.appendChild(private_cont);
 
     reader.readAsDataURL(selectedFile);
-});
+}
+
 
 function delete_image(node) {
-    let parent = node.parents(".img_cont")
+    let parent = node.parentNode;
     parent.parentNode.removeChild(parent);
 }
 
-save_button.addEventListener("click", function () {
+function save_post() {
+    let post_id = null;
+    if (document.getElementById("post_id") != null) {
+        let post_id = document.getElementById("post_id").textContent;
+    }
     let title = document.getElementById("title");
     let description = document.getElementById("description");
     let text = document.getElementById("text");
     let images = document.getElementsByClassName("loaded_img");
 
-    let canvas = document.createElement("canvas");
-    let context = canvas.getContext('2d');
-
     let postImageSet = []
     for (let i = 0; i < images.length; i++) {
         let element = images[i];
-        base_image = new Image();
-        base_image.src = element.src;
-        base_image.onload = function () {
-            context.drawImage(base_image, 100, 100);
+        let pngUrl = element.src;
+        let id_element = element.parentNode.querySelector('.hidden_id');
+        if (id_element == null) {
+            postImageSet.push({
+                "image": pngUrl
+            });
+            continue;
         }
-        let pngUrl = canvas.toDataURL("image/jpeg");
-        listUrl.push(pngUrl);
+
+        let image_id = Number(id_element.textContent);
+        postImageSet.push({
+            "id": image_id,
+            "image": pngUrl
+        });
+
     }
 
     let data = {
+        "id": post_id,
         "title": title.value,
         "text": text.value,
         "description": description.value,
-        "postImageSet": postImageSet
+        "postImages": postImageSet
     };
     let json = JSON.stringify(data);
 
-    http_post("/creator/create_new", data);
-});
+    let code = http_post("save_post", json);
+    alert(code[0]);
+    if (code[1] == 200) {
+        document.location.href = "/";
+    }
+};
 
 

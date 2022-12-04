@@ -37,7 +37,6 @@ submit.addEventListener('click', function () {
             "password": pass,
         }
         json = JSON.stringify(data);
-        http_post("/authenticateUser", json);
         document.location.href = "/login"
     }
 

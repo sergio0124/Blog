@@ -3,7 +3,6 @@ package reznikov.sergey.blog.mappings;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import reznikov.sergey.blog.DTO.SubscribeDTO;
-import reznikov.sergey.blog.DTO.PostDTO;
 import reznikov.sergey.blog.DTO.UserDTO;
 import reznikov.sergey.blog.entities.Subscribe;
 
@@ -16,7 +15,7 @@ public class MappingSubscribe {
     }
 
     //из entity в dto
-    public SubscribeDTO mapToAppointmentDto(Subscribe subscribe) {
+    public SubscribeDTO mapToSubscribeDto(Subscribe subscribe) {
         if (subscribe == null) {
             return null;
         }
@@ -33,7 +32,7 @@ public class MappingSubscribe {
     }
 
     //из dto в entity
-    public Subscribe mapToAppointmentEntity(SubscribeDTO dto) {
+    public Subscribe mapToSubscribeEntity(SubscribeDTO dto) {
         return modelMapper.map(dto, Subscribe.class);
     }
 }

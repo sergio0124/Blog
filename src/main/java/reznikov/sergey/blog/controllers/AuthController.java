@@ -12,6 +12,9 @@ import reznikov.sergey.blog.entities.User;
 import reznikov.sergey.blog.mappings.MappingUser;
 import reznikov.sergey.blog.services.UserService;
 
+import java.util.HashMap;
+import java.util.Objects;
+
 @Controller
 public class AuthController {
 
@@ -34,8 +37,8 @@ public class AuthController {
     }
 
 
-    @PostMapping("/user/update_user")
-    ResponseEntity<Object> changePassword(@RequestBody UserDTO userDTO,
+    @PostMapping("/update_user")
+    ResponseEntity<Object> updateUser(@RequestBody UserDTO userDTO,
                                           @AuthenticationPrincipal User user) {
         userDTO.setId(user.getId());
         try {
@@ -52,4 +55,11 @@ public class AuthController {
         return "account/registration";
     }
 
+
+    @GetMapping("/info")
+    String getUserInfo(@AuthenticationPrincipal User user,
+                       HashMap<String, Object> model) {
+        model.put("user", mappingUser.mapToUserDto(user));
+        return "account/user_info_page";
+    }
 }

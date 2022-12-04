@@ -8,6 +8,6 @@ import reznikov.sergey.blog.entities.Post;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    Page<Comment> findCommentsByPost(Post post, Pageable pageable);
+    Page<Comment> findCommentsByPost_Id(Long post_id, Pageable pageable);
 
 }

@@ -18,7 +18,7 @@ public class MappingPostImage {
     }
 
     //из entity в dto
-    public PostImageDTO mapToAppointmentDto(PostImage postImage) {
+    public PostImageDTO mapToPostImageDto(PostImage postImage) {
         if (postImage == null) {
             return null;
         }
@@ -33,7 +33,7 @@ public class MappingPostImage {
     }
 
     //из dto в entity
-    public PostImage mapToAppointmentEntity(PostImageDTO dto) {
+    public PostImage mapToPostImageEntity(PostImageDTO dto) {
         var postImage = modelMapper.map(dto, PostImage.class);
         postImage.setImage(dto.getImage().getBytes(StandardCharsets.UTF_8));
         return postImage;

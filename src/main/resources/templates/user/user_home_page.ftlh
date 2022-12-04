@@ -1,41 +1,31 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Главная страница пользователя</title>
-
-    <script language="JavaScript">
-        function go_read(id) {
-            document.location.href = "/creator/read_post?id=" + id;
-        }
-
-        function go_search() {
-
-        }
-    </script>
+    <title>Главная страница редактора</title>
+    <script src="pages.js"></script>
+    <script src="search.js"></script>
+    <script src="read_post.js"></script>
 </head>
 <body>
 
 <div>
-    <button onclick="document.location.href = '/user/info'">Информация об аккаунте</button>
+    <div>Пользователь ${user.username}</div>
+    <button onclick="document.location.href = '/info'">Информация об аккаунте</button>
 </div>
 
 <div>
-    <label for="search">Поиск: </label><input type="text" id="search">
-    <button onclick="go_search()">Поиск</button>
+    <label for="search_input">Запрос:</label><input id="search_input" <#if search??>value="${search}"</#if>>
+    <button onclick="search()">Поиск</button>
 </div>
 
+
 <div>
+
     <div>Посты</div>
 
     <#if posts??>
         <#list posts as post>
-            <div onclick="go_read(${post.id})">
-
-                <#if post.creator_name??>
-                    <div>
-                        <label>Имя издателя ${post.creator_name}</label>
-                    </div>
-                </#if>
+            <div>
 
                 <div>
                     <label>Название ${post.title}</label>
@@ -49,10 +39,23 @@
                     <label>Описание: ${post.description}</label>
                 </div>
 
+                <button onclick="read_post(${post.id})">
+                    Читать пост
+                </button>
 
             </div>
         </#list>
     </#if>
+
+    <div>
+        <#if page!=0>
+            <button onclick="increase_page(-1)">Назад</button>
+        </#if>
+        <button id="page_num">${page}</button>
+        <#if posts?size = 5>
+            <button onclick="increase_page(1)">Далее</button>
+        </#if>
+    </div>
 
 </div>
 

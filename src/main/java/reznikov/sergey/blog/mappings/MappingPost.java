@@ -16,7 +16,7 @@ public class MappingPost {
     }
 
     //из entity в dto
-    public PostDTO mapToAppointmentDto(Post post) {
+    public PostDTO mapToPostDto(Post post) {
         if (post == null) {
             return null;
         }
@@ -25,12 +25,13 @@ public class MappingPost {
         if (post.getUser() != null) {
             postDTO.setUser(modelMapper.map(post.getUser(), UserDTO.class));
         }
+        postDTO.setLikes(post.getLikes().size());
 
         return postDTO;
     }
 
     //из dto в entity
-    public Post mapToAppointmentEntity(PostDTO dto) {
+    public Post mapToPostEntity(PostDTO dto) {
         return modelMapper.map(dto, Post.class);
     }
 }

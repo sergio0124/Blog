@@ -22,7 +22,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     void deleteById(Long id);
 
 
-    Page<Post> findPostByUserIn(Collection<User> user, Pageable pageable);
+    Page<Post> findPostByUser_IdIn(Collection<Long> user_id, Pageable pageable);
 
 
     Page<Post> findPostsByTitleContainingIgnoreCase(String title, Pageable pageable);
