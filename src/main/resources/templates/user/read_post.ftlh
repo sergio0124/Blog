@@ -9,20 +9,19 @@
 <div>
 
     <#if post??>
-        <div id="post_id" style="display: none">${post.id}</div>
+    <div id="post_id" style="display: none">${post.id}</div>
 
-        <div id="comment_page" style="display: none">0</div>
+    <div id="comment_page" style="display: none">0</div>
 
-        <div>
-            <label for="title">Название:</label><input id="title"
-                    <#if post??>
-                        value="${post.title}"
-                    </#if>
-            >
+    <div>
+        <div id="title">
+            <#if post??>
+                ${post.title}
+            </#if>
         </div>
 
         <div>
-            <label for="description">Описание:</label>
+            <div></div>
             <div id="description">
                 <#if post??>
                     ${post.description}
@@ -31,7 +30,7 @@
         </div>
 
         <div>
-            <label for="text">Текст:</label>
+            <div></div>
             <div id="text">
                 <#if post??>
                     ${post.text}
@@ -40,12 +39,21 @@
         </div>
 
 
+        <div></div>
+        <div id="image_container">
+            <#list post.postImages as image>
+                <div class="img_cont">
+                    <img class="loaded_img" src="${image.image}">
+                </div>
+            </#list>
+        </div>
+
         <div>
             <button id="like_button"
                     style="background-color: <#if liked=true>red<#else>blue</#if>"
                     onclick="like_tap(this, ${post.id})">Лайк
             </button>
-            <label>post.likesCount</label>
+            <label id="like_count">${post.likesCount}</label>
         </div>
 
         <div>
@@ -71,11 +79,11 @@
             </#if>
         </#if>
 
-    <#else>
-        <label>Пост с таким id не найден</label>
-    </#if>
+        <#else>
+            <label>Пост с таким id не найден</label>
+        </#if>
 
-</div>
+    </div>
 
 
 </body>

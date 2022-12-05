@@ -31,17 +31,16 @@ public class UserController {
     PostService postService;
     LikeService likeService;
     CommentService commentService;
+    PostImageService postImageService;
 
-    public UserController(UserService userService,
-                          MappingUser mappingUser, SubscribeService subscribeService,
-                          PostService postService, LikeService likeService,
-                          CommentService commentService) {
+    public UserController(UserService userService, MappingUser mappingUser, SubscribeService subscribeService, PostService postService, LikeService likeService, CommentService commentService, PostImageService postImageService) {
         this.userService = userService;
         this.mappingUser = mappingUser;
         this.subscribeService = subscribeService;
         this.postService = postService;
         this.likeService = likeService;
         this.commentService = commentService;
+        this.postImageService = postImageService;
     }
 
     @GetMapping
@@ -59,12 +58,14 @@ public class UserController {
                 .getPostsBySubscribesByPages(subscribeDTOList, pageRequest);
 
         model.put("posts", posts);
+        model.put("user", mappingUser.mapToUserDto(user));
+        model.put("page", page);
         return "user/user_home_page";
     }
 
 
     @GetMapping("/search")
-    String getSearchPage(@RequestParam("string") String searchRequest,
+    String getSearchPage(@RequestParam("searchRequest") String searchRequest,
                          @RequestParam(value = "page", required = false) Optional<Integer> pageNumber,
                          HashMap<String, Object> model) {
 
@@ -87,10 +88,11 @@ public class UserController {
         UserDTO userDTO = mappingUser.mapToUserDto(user);
         PostDTO postDTO = postService.findPostById(postId);
         if (postDTO == null) {
-            return "user/user_search_page";
+            return "user/read_post";
         }
 
-        postDTO.setLikes(Math.toIntExact(likeService.getPostLikesCount(postDTO)));
+        postDTO.setLikesCount(Math.toIntExact(likeService.getPostLikesCount(postDTO)));
+        postDTO.setPostImages(postImageService.findPostImagesByPost(postDTO));
 
         PageRequest pageRequest =
                 PageRequest.of(0, COMMENTS_PER_PAGE);
@@ -99,7 +101,7 @@ public class UserController {
 
         model.put("liked", likeService.isPostLiked(postDTO, userDTO));
         model.put("post", postDTO);
-        return "user/user_search_page";
+        return "user/read_post";
     }
 
 

@@ -25,7 +25,7 @@ public class MappingPost {
         if (post.getUser() != null) {
             postDTO.setUser(modelMapper.map(post.getUser(), UserDTO.class));
         }
-        postDTO.setLikes(post.getLikes().size());
+        postDTO.setLikesCount(post.getLikes().size());
 
         return postDTO;
     }

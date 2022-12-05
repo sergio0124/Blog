@@ -4,6 +4,7 @@
     <title>Главная страница редактора</title>
     <script src="pages.js"></script>
     <script src="refactor_post.js"></script>
+    <script src="delete.js"></script>
 </head>
 <body>
 

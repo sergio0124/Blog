@@ -1,4 +1,4 @@
-function http_post(theUrl, inputData) {
+function http_post_json(theUrl, inputData) {
     let xmlHttp = new XMLHttpRequest();
     xmlHttp.open("POST", theUrl, false);
     xmlHttp.setRequestHeader("Content-Type", "application/json");
@@ -7,14 +7,34 @@ function http_post(theUrl, inputData) {
     return [xmlHttp.response, xmlHttp.status];
 }
 
+function http_post(theUrl, inputData) {
+    let xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("POST", theUrl, false);
+    xmlHttp.setRequestHeader("Content-Type", "application/json");
+    xmlHttp.send(inputData);
+    return [xmlHttp.response, xmlHttp.status];
+}
+
 
 function like_tap(element, postId) {
-    let color = window.getComputedStyle(element, null).getPropertyValue('background-color');
+    let color = element.style.backgroundColor;
 
-    if (color == 'red') {
-        element.style.backgroundColor = 'blue';
-    } else if (color == 'blue') {
-        element.style.backgroundColor = 'red';
+    let body = {
+        "id": postId
+    }
+    let json = JSON.stringify(body);
+    let responce = http_post("like", json);
+    let like_count_elem = document.getElementById("like_count");
+    if (responce[1] != 200) {
+        alert(responce[0]);
+    } else {
+        if (color == 'blue') {
+            element.style.backgroundColor = 'red';
+            like_count_elem.innerText = '' + (Number(like_count_elem.innerText) + 1);
+        } else if (color == 'red') {
+            element.style.backgroundColor = 'blue';
+            like_count_elem.innerText = '' + (Number(like_count_elem.innerText) - 1);
+        }
     }
 }
 
@@ -27,7 +47,7 @@ function load_comments() {
         "page": pageCount + 1
     };
     let json = JSON.stringify(data);
-    let code = http_post("save_post", json)[0];
+    let code = http_post_json("user/load_comments", json)[0];
 
     let comments_container = document
         .getElementById("comments_container");
@@ -45,7 +65,7 @@ function load_comments() {
     })
 
     let button_load = document.getElementById("load_comments");
-    if(comments_container.childElementCount % 10 != 0){
+    if (comments_container.childElementCount % 10 != 0) {
         button_load.style.display = "none";
     }
 }

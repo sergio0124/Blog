@@ -45,8 +45,7 @@ public class PostImageService {
                         .noneMatch(p -> Objects.equals(p.getId(), rec.getId()))).toList();
         imagesForDeleting
                 .forEach(rec->postImageRepository
-                        .delete(mappingPostImage
-                                .mapToPostImageEntity(rec)));
+                        .deletePostImageById(rec.getId()));
 
         postImageRepository.saveAll(postImageDTOList
                 .stream()

@@ -17,7 +17,7 @@
     </div>
 
     <div>
-        <label for="title">Название:</label><input id="title" value="<#if post??>value="${post.title}"</#if>">
+        <label for="title">Название:</label><input id="title" <#if post??>value="${post.title}"</#if>">
     </div>
 
     <div>
@@ -32,7 +32,7 @@
 
     <div>
         <label for="image">Загрузить изображение: </label>
-        <input type="file" onchange="load_image(event)" accept=".png,.jpeg">
+        <input type="file" onchange="load_image(event)" accept=".png,.jpeg,.jpg">
     </div>
 
     <label>Изображения:</label>

@@ -11,9 +11,9 @@ import reznikov.sergey.blog.entities.User;
 public class HelloController {
 
     @GetMapping("/")
-    public ModelAndView sayHello(@AuthenticationPrincipal User curUser) {
+    public String sayHello(@AuthenticationPrincipal User curUser) {
         if (curUser == null) {
-            return new ModelAndView("redirect:/login");
+            return "redirect:/login";
         }
 
         ModelAndView modelAndView = new ModelAndView();
@@ -23,12 +23,12 @@ public class HelloController {
         } else if (roles.contains(Role.ADMIN)) {
 
         } else if (roles.contains(Role.CREATOR)) {
-            modelAndView.setViewName("redirect:creator/");
+            return "redirect:creator/";
         } else if (roles.contains(Role.USER)) {
-
+            return "redirect:user/";
         }
 
-        return modelAndView;
+        return "error";
     }
 
 }

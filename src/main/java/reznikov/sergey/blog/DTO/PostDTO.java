@@ -1,6 +1,7 @@
 package reznikov.sergey.blog.DTO;
 
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,7 +22,7 @@ public class PostDTO extends BaseEntityDTO {
 
     List<CommentDTO> comments = new ArrayList<>();
 
-    private int likes;
+    private int likesCount;
 
     List<ReportDTO> reports = new ArrayList<>();
 

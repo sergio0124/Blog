@@ -21,9 +21,8 @@ function load_image(event) {
     };
 
     let delete_button = document.createElement("button");
-    delete_button.setAttribute("onchange", "delete_image(this)");
-    delete_button.setAttribute("text", "Удалить это изображение");
-
+    delete_button.innerHTML = "Удалить это изображение";
+    delete_button.onclick = function(){delete_image(delete_button);}
     private_cont.appendChild(loaded_img);
     private_cont.appendChild(delete_button);
 
@@ -41,7 +40,7 @@ function delete_image(node) {
 function save_post() {
     let post_id = null;
     if (document.getElementById("post_id") != null) {
-        let post_id = document.getElementById("post_id").textContent;
+        post_id = document.getElementById("post_id").textContent;
     }
     let title = document.getElementById("title");
     let description = document.getElementById("description");

@@ -19,7 +19,7 @@ function delete_post(id, element){
 
 function http_post(theUrl, inputData) {
     let xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("POST", theUrl, false);
+    xmlHttp.open("DELETE", theUrl, false);
     xmlHttp.setRequestHeader("Content-Type", "application/json");
     xmlHttp.send(inputData);
     return [xmlHttp.response, xmlHttp.status];
