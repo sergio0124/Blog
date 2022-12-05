@@ -13,7 +13,6 @@ import reznikov.sergey.blog.mappings.MappingUser;
 import reznikov.sergey.blog.services.UserService;
 
 import java.util.HashMap;
-import java.util.Objects;
 
 @Controller
 public class AuthController {
