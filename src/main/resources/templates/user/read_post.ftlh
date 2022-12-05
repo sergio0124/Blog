@@ -3,6 +3,7 @@
 <head>
     <title>Чтение поста</title>
     <script src="reading.js"></script>
+    <script src="comment.js"></script>
 </head>
 <body>
 
@@ -14,27 +15,25 @@
     <div id="comment_page" style="display: none">0</div>
 
     <div>
+        <div id="username" onclick="go_to_creator_page(${post.user.id})">
+            ${post.user.username}
+        </div>
+
         <div id="title">
-            <#if post??>
-                ${post.title}
-            </#if>
+            ${post.title}
         </div>
 
         <div>
             <div></div>
             <div id="description">
-                <#if post??>
-                    ${post.description}
-                </#if>
+                ${post.description}
             </div>
         </div>
 
         <div>
             <div></div>
             <div id="text">
-                <#if post??>
-                    ${post.text}
-                </#if>
+                ${post.text}
             </div>
         </div>
 
@@ -61,20 +60,45 @@
         </div>
 
         <div id="comments_container">
+            <label>Комментарии:</label>
             <#if post.comments??>
                 <#list post.comments as comment>
                     <div>
                         <div>${comment.user.username}</div>
-                        <div>${comment.text}</div>
+                        <div>${comment.creationDate}</div>
+                        <#if user.id = comment.user.id>
+
+                            <div>
+                                <label for="comment_text">Текст:</label><input id="comment_text"
+                                                                               value="${comment.text}">
+                                <button onclick="update_comment(this, ${comment.id})">
+                                    Сохранить изменения
+                                </button>
+                            </div>
+                            <div>
+                                <button onclick="delete_comment(this,${comment.id})">
+                                    Удалить комментарий
+                                </button>
+                            </div>
+
+                        <#else>
+                            <div>${comment.text}</div>
+                        </#if>
                     </div>
                 </#list>
             </#if>
         </div>
 
+        <div>
+            <label for="own_comment_text">Текст комментария:</label>
+            <input type="text" id="own_comment_text">
+            <button onclick="send_comment()">Сохранить комментарий</button>
+        </div>
+
         <#if post.comments??>
             <#if post.comments?size = 10>
                 <button id="load_comments"
-                        onclick="load_comments()">Подгрузить комментарии
+                        onclick="load_comments(${user.id})">Подгрузить комментарии
                 </button>
             </#if>
         </#if>
@@ -85,6 +109,6 @@
 
     </div>
 
-
+</div>
 </body>
 </html>

@@ -1,6 +1,9 @@
 package reznikov.sergey.blog.entities;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
@@ -15,7 +18,8 @@ import java.util.*;
 
 @Entity
 @Table(name = "usr")
-@Data
+@Setter
+@Getter
 public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false, unique = true)

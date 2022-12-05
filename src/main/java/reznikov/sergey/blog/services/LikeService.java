@@ -39,7 +39,7 @@ public class LikeService {
 
     public Boolean isPostLiked(PostDTO post, UserDTO userDTO) throws Exception {
         if (post.getId() == null || userDTO.getId() == null) {
-            throw new Exception("Информации для получения дайка недостаточно");
+            throw new Exception("Информации для получения лайка недостаточно");
         }
         return likeRepository
                 .findLikeByPost_IdAndUser_Id(post.getId(), userDTO.getId())

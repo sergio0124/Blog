@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import reznikov.sergey.blog.DTO.CommentDTO;
 import reznikov.sergey.blog.DTO.PostDTO;
 import reznikov.sergey.blog.DTO.SubscribeDTO;
 import reznikov.sergey.blog.DTO.UserDTO;
@@ -100,6 +101,7 @@ public class UserController {
         postDTO.setComments(comments);
 
         model.put("liked", likeService.isPostLiked(postDTO, userDTO));
+        model.put("user", mappingUser.mapToUserDto(user));
         model.put("post", postDTO);
         return "user/read_post";
     }
@@ -130,56 +132,76 @@ public class UserController {
     }
 
 
-//    @PostMapping("/subscribe")
-//    ResponseEntity<Object> subscribe(HttpServletRequest request) {
-//
-//        User subscriber = userRepository
-//                .findUserById(Long.valueOf(request.getParameter("subscriberid")))
-//                .orElse(null);
-//        User influencer = userRepository
-//                .findUserById(Long.valueOf(request.getParameter("influencerid")))
-//                .orElse(null);
-//
-//        if (subscriber == null || influencer == null) {
-//            return ResponseEntity.badRequest().body("Один из пользователей не найден");
-//        }
-//
-//        Subscribe subscribe = new Subscribe();
-//        subscribe.setSubscriber(subscriber);
-//        subscribe.setInfluencer(influencer);
-//
-//        subscribeRepository.save(subscribe);
-//        return ResponseEntity.ok("Подписка оформлена");
-//    }
-//
-//
-//
-//    @PostMapping("/create_comment")
-//    ResponseEntity<Object> saveComment(HttpServletRequest request) {
-//
-//        User user = userRepository
-//                .findUserById(Long.valueOf(request.getParameter("userid")))
-//                .orElse(null);
-//        Post post = postRepository
-//                .findPostById(Long.valueOf(request.getParameter("postid")))
-//                .orElse(null);
-//        String text = request.getParameter("text");
-//
-//        if (user == null || post == null) {
-//            return ResponseEntity.badRequest().body("Произошла ошибка в получении данных");
-//        }
-//
-//        Comment comment = new Comment();
-//        comment.setUser(user);
-//        comment.setPost(post);
-//        comment.setText(text);
-//
-//        commentRepository.save(comment);
-//        return ResponseEntity.ok("Комментарий сохранен");
-//
-//    }
-//
-//
+    @GetMapping("check_creator")
+    String getUserPage(
+            @RequestParam("userId") Long userId,
+            @RequestParam(value = "page", required = false) Optional<Integer> pageNumber,
+            @AuthenticationPrincipal User user,
+            HashMap<String, Object> model
+    ) throws Exception {
+        int page = pageNumber.orElse(0);
+        PageRequest pageRequest =
+                PageRequest.of(page, PAGE_SIZE);
+        UserDTO userDTO = userService.loadUserById(userId);
+        userDTO.setId(userId);
+
+        List<PostDTO> posts = postService.findPostsByUser(userDTO, pageRequest);
+
+        model.put("posts", posts);
+        model.put("user", userDTO);
+        model.put("page", page);
+        model.put("subscribed", subscribeService.isUserSubscribedTo(user, userDTO));
+        return "user/check_user";
+    }
+
+
+    @PostMapping("/subscribe")
+    ResponseEntity<Object> subscribe(@RequestBody UserDTO userDTO,
+                                     @AuthenticationPrincipal User user) {
+
+        try {
+            subscribeService.subscribeOrUnsubscribe(userDTO, user);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+        return ResponseEntity.ok("Выполнено успешно");
+    }
+
+
+
+    @PostMapping("/save_comment")
+    ResponseEntity<Object> saveComment(@AuthenticationPrincipal User user,
+                                       @RequestBody CommentDTO commentDTO) {
+
+        commentDTO.setUser(mappingUser.mapToUserDto(user));
+        try {
+            commentService.saveComment(commentDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+        return ResponseEntity.ok("Комментарий сохранен");
+
+    }
+
+
+
+    @PostMapping("/delete_comment")
+    ResponseEntity<Object> deleteComment(@AuthenticationPrincipal User user,
+                                       @RequestBody CommentDTO commentDTO) {
+
+        commentDTO.setUser(mappingUser.mapToUserDto(user));
+        try {
+            commentService.deleteComment(commentDTO);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+        return ResponseEntity.ok("Комментарий удален");
+
+    }
+
+
 //    @PostMapping("/create_report")
 //    ResponseEntity<Object> saveReport(HttpServletRequest request) {
 //

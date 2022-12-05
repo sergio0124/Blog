@@ -1,6 +1,8 @@
 package reznikov.sergey.blog.entities;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -12,7 +14,8 @@ import java.util.Set;
 
 @Entity
 @Table(name = "post")
-@Data
+@Setter
+@Getter
 public class Post extends BaseEntity {
 
     @CreationTimestamp

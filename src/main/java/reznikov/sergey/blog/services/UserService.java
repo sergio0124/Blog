@@ -1,6 +1,5 @@
 package reznikov.sergey.blog.services;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,9 +9,6 @@ import reznikov.sergey.blog.DTO.UserDTO;
 import reznikov.sergey.blog.entities.User;
 import reznikov.sergey.blog.mappings.MappingUser;
 import reznikov.sergey.blog.repositories.UserRepository;
-
-import java.util.List;
-import java.util.Objects;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -63,5 +59,13 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+    }
+
+    public UserDTO loadUserById(Long userId) throws Exception {
+        User user = userRepo.findUserById(userId).orElse(null);
+        if(user==null){
+            throw new Exception("Пользователь с таким id не найден");
+        }
+        return mappingUser.mapToUserDto(user);
     }
 }

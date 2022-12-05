@@ -1,13 +1,14 @@
 package reznikov.sergey.blog.DTO;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Data
+@Setter
+@Getter
 public class PostDTO extends BaseEntityDTO {
 
     private Date date = new Date();

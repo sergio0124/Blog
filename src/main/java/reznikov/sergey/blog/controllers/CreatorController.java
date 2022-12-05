@@ -1,5 +1,6 @@
 package reznikov.sergey.blog.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -22,18 +23,14 @@ import java.util.Optional;
 @PreAuthorize("hasAnyAuthority('CREATOR')")
 @Controller
 @RequestMapping("/creator")
+@RequiredArgsConstructor
 public class CreatorController {
 
-    int PAGE_SIZE = 5;
-    PostService postService;
-    MappingUser mappingUser;
-    PostImageService postImageService;
+    private static final int PAGE_SIZE = 5;
+    private final PostService postService;
+    private final MappingUser mappingUser;
+    private final PostImageService postImageService;
 
-    public CreatorController(PostService postService, MappingUser mappingUser, PostImageService postImageService) {
-        this.postService = postService;
-        this.mappingUser = mappingUser;
-        this.postImageService = postImageService;
-    }
 
     @GetMapping
     String creatorMainPage(@RequestParam(value = "page", required = false) Optional<Integer> pageNumber,

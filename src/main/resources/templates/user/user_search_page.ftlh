@@ -3,15 +3,8 @@
 <head>
     <title>Поиск</title>
 
-    <script language="JavaScript">
-        function go_read(id) {
-            document.location.href = "/creator/read_post?id=" + id;
-        }
-
-        function go_search() {
-
-        }
-    </script>
+    <script src="read_post.js"></script>
+    <script src="search.js"></script>
 </head>
 <body>
 
@@ -20,8 +13,8 @@
 </div>
 
 <div>
-    <label for="search">Поиск: </label><input type="text" id="search">
-    <button onclick="go_search()">Поиск</button>
+    <label for="search">Поиск: </label><input type="text" id="search_input">
+    <button onclick="search()">Поиск</button>
 </div>
 
 <div>
@@ -29,7 +22,7 @@
 
     <#if posts??>
         <#list posts as post>
-            <div onclick="go_read(${post.id})">
+            <div onclick="read_post(${post.id})">
 
                 <#if post.creator_name??>
                     <div>

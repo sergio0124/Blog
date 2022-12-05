@@ -2,8 +2,10 @@ package reznikov.sergey.blog.DTO;
 
 import com.sun.istack.NotNull;
 
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
+@MappedSuperclass
 public abstract class BaseEntityDTO implements Serializable, Comparable<BaseEntityDTO>{
 
     private Long id;
