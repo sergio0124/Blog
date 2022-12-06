@@ -9,7 +9,6 @@ public class UserDTO extends BaseEntityDTO {
 
     private String username;
 
-    private String oldPassword;
     private String password;
 
     private Date registrationDate = new Date();

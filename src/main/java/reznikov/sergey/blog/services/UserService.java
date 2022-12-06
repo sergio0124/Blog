@@ -70,9 +70,6 @@ public class UserService implements UserDetailsService {
         if (user == null) {
             throw new Exception("Пользователь с таким id не найден");
         }
-        if (!bCryptPasswordEncoder.matches(userDTO.getOldPassword(), user.getPassword())) {
-            throw new Exception("Введен неверный старый пароль");
-        }
 
         if (userDTO.getPassword() != null) {
             user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));

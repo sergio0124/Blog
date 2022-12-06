@@ -13,9 +13,6 @@
 
     <div>
         <div>Изменить логин аккаунта:</div>
-        <label>Введите пароль
-            <input id="lp" type="password">
-        </label>
         <label>Введите новый логин
             <input id="ll" type="text" value="${user.username}">
         </label>
@@ -25,9 +22,6 @@
 
     <div>
         <div>Изменить пароль аккаунта:</div>
-        <label>Введите старый пароль
-            <input id="pop" type="password">
-        </label>
         <label>Введите новый пароль
             <input id="pnp" type="password">
         </label>

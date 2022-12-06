@@ -65,7 +65,7 @@ public class AuthController {
     }
 
 
-    @GetMapping("/activate/{code}")
+    @GetMapping("activate/{code}")
     public String activate(Model model, @PathVariable String code) {
         boolean isActivated = userService.activateUser(code);
 
@@ -76,5 +76,28 @@ public class AuthController {
         }
 
         return "account/login_user";
+    }
+
+
+    @GetMapping("activate/recover_password")
+    public String recover(HashMap<String, Object> model,
+                          ){
+        model.put("message", "Ссылка для восстановления отправлена на почту и действует в течение 10 минут");
+
+        return "account/recover_password_login";
+    }
+
+    @GetMapping("activate/recover_password/{code}")
+    public String recoverPassword(@PathVariable String code){
+        return "account/recover_password";
+    }
+
+
+    @PostMapping("activate/recover_password/{code}")
+    public String recoverPasswordPost(@PathVariable String code,
+                                      HashMap<String, Object> model){
+
+        model.put("message", "Пароль обновлен");
+        return "redirect:login";
     }
 }

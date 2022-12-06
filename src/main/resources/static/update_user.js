@@ -1,8 +1,6 @@
 function update_username() {
-    let old_password = document.getElementById("lp").value;
     let username = document.getElementById("ll").value;
     let data = {
-        "oldPassword": old_password,
         "username": username
     };
     let json = JSON.stringify(data);
@@ -13,10 +11,8 @@ function update_username() {
 }
 
 function update_password() {
-    let old_password = document.getElementById("pop").value;
     let new_password = document.getElementById("pnp").value;
     let data = {
-        "oldPassword": old_password,
         "password": new_password
     };
     let json = JSON.stringify(data);

@@ -17,6 +17,7 @@
 
 </div>
 <p>Registration <a href="/registration"> here</a></p>
+<p>Восстановление пароля <a href="/activate/recover_password"> here</a></p>
 
 <form action="/authenticateUser" method="post">
     <div><label> User Name : <input type="text" name="username"/> </label></div>
