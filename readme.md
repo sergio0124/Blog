@@ -32,7 +32,7 @@
    [ScheduleConfig](src/main/java/reznikov/sergey/blog/configurations/ScheduleConfig.java), [ScheduledService](src/main/java/reznikov/sergey/blog/services/ScheduledService.java)
 
 * Сервис должен интегрироваться со сторонними сервисами с использованием 
-RestTemplate или FeignClient ----- Не делал, почту подтяну потом
+RestTemplate или FeignClient ----- Сделал почту [config](src/main/java/reznikov/sergey/blog/configurations/MailConfig.java), [sevice](src/main/java/reznikov/sergey/blog/services/MailSender.java) 
 
 * Сервис должен иметь UI-часть ------ *Здесь большая часть времени * Я написал тысячу [js](src/main/resources/static/user/comment.js) скриптов, css не завез (см. видео или [templates](src/main/resources/templates/user))
 
