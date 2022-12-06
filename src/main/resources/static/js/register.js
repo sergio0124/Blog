@@ -2,6 +2,7 @@ submit = document.getElementById("registration_submit");
 username = document.getElementById("registration_username");
 password = document.getElementById("registration_password");
 select = document.getElementById("registration_option");
+email = document.getElementById("registration_mail");
 message = document.getElementById("response_message");
 
 
@@ -19,27 +20,18 @@ submit.addEventListener('click', function () {
     let type = select.value;
     let pass = password.value;
     let name = username.value;
+    let mail = email.value;
 
     let data = {
         "username": name,
         "password": pass,
+        "mail": mail,
         "roles": [type]
     }
     let json = JSON.stringify(data);
 
     let response = http_post("/registration", json)
     let text = response[0]
-    let status = response[1]
-
-    if (status == 200) {
-        data = {
-            "username": name,
-            "password": pass,
-        }
-        json = JSON.stringify(data);
-        document.location.href = "/login"
-    }
 
     message.innerHTML = text;
-
 });

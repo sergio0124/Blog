@@ -35,22 +35,22 @@ public class Post extends BaseEntity {
     private String text;
 
     @OneToMany(mappedBy = "post",
-            cascade = CascadeType.REMOVE,
+            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "post",
-            cascade = CascadeType.REMOVE,
+            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     List<Like> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "post",
-            cascade = CascadeType.REMOVE,
+            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     List<Report> reports = new ArrayList<>();
 
     @OneToMany(mappedBy = "post",
-            cascade = CascadeType.REMOVE,
+            cascade = CascadeType.ALL,
             fetch = FetchType.LAZY)
     List<PostImage> postImages = new ArrayList<>();
 }

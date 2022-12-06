@@ -4,7 +4,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import reznikov.sergey.blog.DTO.UserDTO;
@@ -32,7 +34,7 @@ public class AuthController {
         } catch (Exception ex) {
             return ResponseEntity.status(400).body(ex.getMessage());
         }
-        return ResponseEntity.ok("registration complete");
+        return ResponseEntity.ok("Активируйте почту в своем аккаунте");
     }
 
 
@@ -60,5 +62,19 @@ public class AuthController {
                        HashMap<String, Object> model) {
         model.put("user", mappingUser.mapToUserDto(user));
         return "account/user_info_page";
+    }
+
+
+    @GetMapping("/activate/{code}")
+    public String activate(Model model, @PathVariable String code) {
+        boolean isActivated = userService.activateUser(code);
+
+        if (isActivated) {
+            model.addAttribute("message", "User successfully activated");
+        } else {
+            model.addAttribute("message", "Activation code is not found!");
+        }
+
+        return "account/login_user";
     }
 }

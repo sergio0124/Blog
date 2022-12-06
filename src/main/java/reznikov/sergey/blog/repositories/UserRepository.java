@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface
+
+UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUsername(String username);
     Boolean existsByUsername(String username);
@@ -21,4 +23,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findUsersByRoles_NameIn(Collection<String> roles_name, Pageable pageable);
 
     Page<User> findUsersByRoles_NameInAndUsernameContainingIgnoreCase(Collection<String> roles_name, String username, Pageable pageable);
+
+    Optional<User> findUserByActivationCode(String activationCode);
 }

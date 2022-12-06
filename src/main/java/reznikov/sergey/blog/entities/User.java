@@ -1,11 +1,7 @@
 package reznikov.sergey.blog.entities;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -39,23 +35,29 @@ public class User extends BaseEntity implements UserDetails {
 
     private boolean nonLocked = true;
 
+    private String mail;
+
+    private boolean active = false;
+
+    private String activationCode;
+
     @OneToMany(mappedBy = "user",
-            cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+            cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Post> posts = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Comment> comments;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Like> likes;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Report> reports;
 
-    @OneToMany(mappedBy = "subscriber", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "subscriber", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Subscribe> subscribes;
 
-    @OneToMany(mappedBy = "influencer", cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "influencer", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<Subscribe> influencers;
 
 
@@ -93,6 +95,6 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return active;
     }
 }

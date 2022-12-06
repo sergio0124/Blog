@@ -14,7 +14,7 @@ public class ScheduledService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @SchedulerLock(name = "task_lock", lockAtLeastFor = "PT60M")
-    @Scheduled(fixedDelay = 1000, initialDelay = 1000)
+    @Scheduled(fixedDelayString = "2000", initialDelay = 1000)
     public void scheduledTask() throws InterruptedException {
 
         logger.info("ScheduledTask работает, честно");

@@ -17,4 +17,10 @@ public class UserDTO extends BaseEntityDTO {
     private Set<String> roles;
 
     private boolean nonLocked = true;
+
+    private String mail;
+
+    private boolean active = false;
+
+    private String activationCode;
 }
