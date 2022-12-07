@@ -26,9 +26,7 @@
 Лучше всего операции прописаны в контроллерах: [user](src/main/java/reznikov/sergey/blog/controllers/UserController.java), [creator](src/main/java/reznikov/sergey/blog/controllers/CreatorController.java)
 
 5. Сервис должен уметь обрабатывать фоновые процессы (Schedule) -------
-У меня не было задачек, которые можно через schedule сделать. Позднее
-планирую прикрутить восстановление пароля по почте и авторизацию с хранением хэшей
-в памяти так, чтобы они очищались по времени. Пока сделал логирование по таймауту
+Я сделал восстановление пароля через почту, в шедуле регулируется, чтобы код для изменения пароля держался по 10 минут (в видосе этого нет)
    [ScheduleConfig](src/main/java/reznikov/sergey/blog/configurations/ScheduleConfig.java), [ScheduledService](src/main/java/reznikov/sergey/blog/services/ScheduledService.java)
 
 * Сервис должен интегрироваться со сторонними сервисами с использованием 
@@ -64,6 +62,8 @@ RestTemplate или FeignClient ----- Сделал почту [config](src/main/
 * Оставление лайков или же их удаление
 * Подписка на блогера или же отписка
 * Просмотр страницы блогера
+* Добавление почты
+* Восстановление пароля
 
 ## Что еше должно быть здесь сейчас, но появится только потом ##
 
