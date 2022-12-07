@@ -27,16 +27,6 @@ public class AuthController {
         this.mappingUser = mappingUser;
     }
 
-    @PostMapping(path = "/registration", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> register(@RequestBody UserDTO userDTO) {
-        try {
-            userService.registerUser(userDTO);
-        } catch (Exception ex) {
-            return ResponseEntity.status(400).body(ex.getMessage());
-        }
-        return ResponseEntity.ok("Активируйте почту в своем аккаунте");
-    }
-
 
     @PostMapping("/update_user")
     ResponseEntity<Object> updateUser(@RequestBody UserDTO userDTO,
@@ -51,12 +41,6 @@ public class AuthController {
     }
 
 
-    @GetMapping("/registration")
-    public String registrationPage() {
-        return "account/registration";
-    }
-
-
     @GetMapping("/info")
     String getUserInfo(@AuthenticationPrincipal User user,
                        HashMap<String, Object> model) {
@@ -64,40 +48,4 @@ public class AuthController {
         return "account/user_info_page";
     }
 
-
-    @GetMapping("activate/{code}")
-    public String activate(Model model, @PathVariable String code) {
-        boolean isActivated = userService.activateUser(code);
-
-        if (isActivated) {
-            model.addAttribute("message", "User successfully activated");
-        } else {
-            model.addAttribute("message", "Activation code is not found!");
-        }
-
-        return "account/login_user";
-    }
-
-
-    @GetMapping("activate/recover_password")
-    public String recover(HashMap<String, Object> model,
-                          ){
-        model.put("message", "Ссылка для восстановления отправлена на почту и действует в течение 10 минут");
-
-        return "account/recover_password_login";
-    }
-
-    @GetMapping("activate/recover_password/{code}")
-    public String recoverPassword(@PathVariable String code){
-        return "account/recover_password";
-    }
-
-
-    @PostMapping("activate/recover_password/{code}")
-    public String recoverPasswordPost(@PathVariable String code,
-                                      HashMap<String, Object> model){
-
-        model.put("message", "Пароль обновлен");
-        return "redirect:login";
-    }
 }

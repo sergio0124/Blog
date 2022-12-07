@@ -28,7 +28,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/registration", "/login", "/logout", "/error", "/activate/**").permitAll()
                 .antMatchers("/static/**", "/**.js").permitAll()
-                .antMatchers("/static/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -41,11 +40,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web.ignoring()
-                .antMatchers("/resources/**",
-                        "/assets/**", "/css/**",
-                        "/js/**", "/auth/login.html");
+                .antMatchers("/static/**",
+                        "static/account/**");
     }
 
 

@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Log in</title>
-    <script src="static/js/alert.js"></script>
+    <title>Регистрация</title>
 </head>
 <body>
 

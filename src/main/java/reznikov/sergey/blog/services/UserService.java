@@ -23,7 +23,7 @@ public class UserService implements UserDetailsService {
 
     private final MappingUser mappingUser;
 
-    private final MailSender mailSender;
+    private final MailSenderService mailSender;
 
     public void registerUser(UserDTO userDTO) throws Exception {
         User user = mappingUser.mapToUserEntity(userDTO);
@@ -39,7 +39,7 @@ public class UserService implements UserDetailsService {
         if (!StringUtils.isNullOrEmpty(user.getMail())) {
             String message = String.format(
                     "Hello, %s! \n" +
-                            "Welcome to Sweater. Please, visit next link: http://localhost:8080/activate/%s",
+                            "Welcome to Blog. Please, visit next link: http://localhost:8080/activate/%s",
                     user.getUsername(),
                     user.getActivationCode()
             );
@@ -86,10 +86,14 @@ public class UserService implements UserDetailsService {
         return userRepo.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
 
-    public UserDTO loadUserById(Long userId) throws Exception {
+    public UserDTO loadUserDTOByUsername(String username) throws UsernameNotFoundException {
+        return mappingUser.mapToUserDto(userRepo.findByUsername(username).orElse(null));
+    }
+
+    public UserDTO loadUserById(Long userId)  {
         User user = userRepo.findUserById(userId).orElse(null);
         if (user == null) {
-            throw new Exception("Пользователь с таким id не найден");
+            return null;
         }
         return mappingUser.mapToUserDto(user);
     }

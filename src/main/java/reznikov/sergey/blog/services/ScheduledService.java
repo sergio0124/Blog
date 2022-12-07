@@ -51,12 +51,16 @@ public class ScheduledService {
     }
 
     public Long getIdByCode(String code) {
-        return map.get(code) != null
+        return map.containsKey(code)
                 ? map.get(code).getId()
                 : null;
     }
 
     public void deleteCode(String code) {
         map.remove(code);
+    }
+
+    public boolean isCodeExists(String code) {
+        return map.containsKey(code);
     }
 }

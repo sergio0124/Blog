@@ -13,6 +13,10 @@
     <p>
         ${status}
     </p>
+<#elseif message??>
+    <p>
+        ${message}
+    </p>
 </#if>
 
 </div>
