@@ -4,6 +4,7 @@
     <title>Чтение поста</title>
     <script src="reading.js"></script>
     <script src="comment.js"></script>
+    <script src="report.js"></script>
 </head>
 <body>
 
@@ -56,7 +57,7 @@
         </div>
 
         <div>
-            <button id="report_button">Репорт</button>
+            <button id="report_button" onclick="go_report(${post.id})">Репорт</button>
         </div>
 
         <div id="comments_container">

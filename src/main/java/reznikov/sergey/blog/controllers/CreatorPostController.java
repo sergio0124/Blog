@@ -24,7 +24,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/creator")
 @RequiredArgsConstructor
-public class CreatorController {
+public class CreatorPostController {
 
     private static final int PAGE_SIZE = 5;
     private final PostService postService;

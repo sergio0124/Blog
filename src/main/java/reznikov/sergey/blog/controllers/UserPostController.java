@@ -1,5 +1,6 @@
 package reznikov.sergey.blog.controllers;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
@@ -7,42 +8,31 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import reznikov.sergey.blog.DTO.CommentDTO;
-import reznikov.sergey.blog.DTO.PostDTO;
-import reznikov.sergey.blog.DTO.SubscribeDTO;
-import reznikov.sergey.blog.DTO.UserDTO;
+import reznikov.sergey.blog.DTO.*;
 import reznikov.sergey.blog.entities.User;
+import reznikov.sergey.blog.entities.enums.ReportType;
 import reznikov.sergey.blog.mappings.MappingUser;
 import reznikov.sergey.blog.services.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @PreAuthorize("hasAnyAuthority('USER')")
 @Controller
 @RequestMapping("/user")
-public class UserController {
+@RequiredArgsConstructor
+public class UserPostController {
     int PAGE_SIZE = 5;
     int COMMENTS_PER_PAGE = 10;
 
-    UserService userService;
-    MappingUser mappingUser;
-    SubscribeService subscribeService;
-    PostService postService;
-    LikeService likeService;
-    CommentService commentService;
-    PostImageService postImageService;
+    private final UserService userService;
+    private final MappingUser mappingUser;
+    private final SubscribeService subscribeService;
+    private final PostService postService;
+    private final LikeService likeService;
+    private final CommentService commentService;
+    private final PostImageService postImageService;
 
-    public UserController(UserService userService, MappingUser mappingUser, SubscribeService subscribeService, PostService postService, LikeService likeService, CommentService commentService, PostImageService postImageService) {
-        this.userService = userService;
-        this.mappingUser = mappingUser;
-        this.subscribeService = subscribeService;
-        this.postService = postService;
-        this.likeService = likeService;
-        this.commentService = commentService;
-        this.postImageService = postImageService;
-    }
+    private final ReportService reportService;
 
     @GetMapping
     String getHomePage(@RequestParam(value = "page", required = false) Optional<Integer> pageNumber,
@@ -168,7 +158,6 @@ public class UserController {
     }
 
 
-
     @PostMapping("/save_comment")
     ResponseEntity<Object> saveComment(@AuthenticationPrincipal User user,
                                        @RequestBody CommentDTO commentDTO) {
@@ -185,10 +174,9 @@ public class UserController {
     }
 
 
-
     @PostMapping("/delete_comment")
     ResponseEntity<Object> deleteComment(@AuthenticationPrincipal User user,
-                                       @RequestBody CommentDTO commentDTO) {
+                                         @RequestBody CommentDTO commentDTO) {
 
         commentDTO.setUser(mappingUser.mapToUserDto(user));
         try {
@@ -202,28 +190,34 @@ public class UserController {
     }
 
 
-//    @PostMapping("/create_report")
-//    ResponseEntity<Object> saveReport(HttpServletRequest request) {
-//
-//        User user = userRepository
-//                .findUserById(Long.valueOf(request.getParameter("user_id")))
-//                .orElse(null);
-//        Post post = postRepository
-//                .findPostById(Long.valueOf(request.getParameter("post_id")))
-//                .orElse(null);
-//        String text = request.getParameter("repost_text");
-//
-//        if (user == null || post == null) {
-//            return ResponseEntity.badRequest().body("Произошла ошибка в получении данных");
-//        }
-//
-//        Report report = new Report();
-//        report.setUser(user);
-//        report.setPost(post);
-//        report.setReportType(ReportType.fromRussian(text));
-//
-//        reportRepository.save(report);
-//        return ResponseEntity.ok("Репорт сохранен");
-//
-//    }
+    @GetMapping("/report_post/{postId}")
+    private String getRepostPage(@PathVariable Long postId,
+                                 Map<String, Object> model) {
+        PostDTO postDTO = postService.findPostById(postId);
+        if (postDTO == null) {
+            model.put("message", "Пост не найден");
+        } else {
+            model.put("post", postDTO);
+            List<String> reportTypes = Arrays
+                    .stream(ReportType.values())
+                    .map(ReportType::getInRussian)
+                    .toList();
+            model.put("reportTypes", reportTypes);
+        }
+        return "user/report_post";
+    }
+
+
+    @PostMapping("/report_post/{postId}")
+    private ResponseEntity<Object> saveReport(@RequestBody ReportDTO reportDTO,
+                                              @AuthenticationPrincipal User user,
+                                              @PathVariable Long postId) {
+        reportDTO.setPost(postService.findPostById(postId));
+        reportDTO.setUser(mappingUser.mapToUserDto(user));
+        if (reportDTO.getPost() == null) {
+            return ResponseEntity.badRequest().body("Не найден пост");
+        }
+        reportService.saveReport(reportDTO);
+        return ResponseEntity.ok("Репорт создан");
+    }
 }
