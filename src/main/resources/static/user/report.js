@@ -1,5 +1,5 @@
 function go_report(post_id) {
-    window.location.href = "/report_post/" + post_id;
+    window.location.href = "report_post/" + post_id;
 }
 
 function send_report() {

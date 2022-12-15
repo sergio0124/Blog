@@ -1,6 +1,7 @@
 package reznikov.sergey.blog.entities;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 

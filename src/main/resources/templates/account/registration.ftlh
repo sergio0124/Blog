@@ -29,7 +29,7 @@
 
 
 </body>
-<script src="js/register.js"></script>
+<script src="register.js"></script>
 
 </script>
 

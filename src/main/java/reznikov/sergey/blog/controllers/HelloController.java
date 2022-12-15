@@ -17,7 +17,7 @@ public class HelloController {
 
         var roles = curUser.getRoles();
         if (roles.contains(Role.MAIN_ADMIN)) {
-
+            return "redirect:main_admin/";
         } else if (roles.contains(Role.ADMIN)) {
 
         } else if (roles.contains(Role.CREATOR)) {

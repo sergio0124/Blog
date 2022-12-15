@@ -10,6 +10,7 @@ import reznikov.sergey.blog.mappings.MappingPost;
 import reznikov.sergey.blog.mappings.MappingSubscribe;
 import reznikov.sergey.blog.repositories.PostRepository;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -50,10 +51,18 @@ public class PostService {
                 postDTO.getTitle() == null || postDTO.getTitle().length() == 0) {
             throw new Exception("Неполные данные, заполните недостающие поля");
         }
+        Post post = postRepository.findPostById(postDTO.getId()).orElse(null);
+        if (post == null) {
+            return null;
+        } else {
+            post.setTitle(postDTO.getTitle());
+            post.setText(postDTO.getText());
+            post.setDescription(postDTO.getDescription());
+            post.setDate(new Timestamp(postDTO.getDate().getTime()));
+        }
         return mappingPost
                 .mapToPostDto(postRepository
-                        .save(mappingPost
-                                .mapToPostEntity(postDTO)));
+                        .save(post));
     }
 
     public List<PostDTO> getPostsBySubscribesByPages(List<SubscribeDTO> subscribeDTOList,
@@ -81,15 +90,15 @@ public class PostService {
 
 
     public void deletePost(PostDTO postDTO, UserDTO userDTO) throws Exception {
-        if(postDTO.getId()==null){
+        if (postDTO.getId() == null) {
             throw new Exception("Не передан id поста");
         }
         Post post = postRepository.findPostById(postDTO.getId())
                 .orElseThrow(null);
-        if(post==null){
+        if (post == null) {
             throw new Exception("Пост не найден");
         }
-        if(!Objects.equals(post.getUser().getId(), userDTO.getId())){
+        if (!Objects.equals(post.getUser().getId(), userDTO.getId())) {
             throw new Exception("Чужие посты может удалить только создатель или админ");
         }
         postRepository.delete(post);

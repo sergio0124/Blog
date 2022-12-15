@@ -5,9 +5,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import reznikov.sergey.blog.entities.User;
+import reznikov.sergey.blog.entities.enums.Role;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface
@@ -20,9 +23,9 @@ UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findUserById(Long id);
 
-    Page<User> findUsersByRoles_NameIn(Collection<String> roles_name, Pageable pageable);
+    Page<User> findUsersByRolesIsIn(Set<Role> roles, Pageable pageable);
 
-    Page<User> findUsersByRoles_NameInAndUsernameContainingIgnoreCase(Collection<String> roles_name, String username, Pageable pageable);
+    Page<User> findUsersByRolesIsInAndUsernameContainsIgnoreCase(Set<Role> roles, String username, Pageable pageable);
 
     Optional<User> findUserByActivationCode(String activationCode);
 }

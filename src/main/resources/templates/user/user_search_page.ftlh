@@ -22,7 +22,7 @@
 
     <#if posts??>
         <#list posts as post>
-            <div onclick="read_post(${post.id})">
+            <div>
 
                 <#if post.creator_name??>
                     <div>
@@ -42,6 +42,7 @@
                     <label>Описание: ${post.description}</label>
                 </div>
 
+                <button onclick="read_post(${post.id})">Читать пост</button>
 
             </div>
         </#list>

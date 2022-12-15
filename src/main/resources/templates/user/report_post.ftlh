@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Создание репорта</title>
-    <script src="report.js"></script>
+    <script src="/user/report.js"></script>
 </head>
 <body>
 

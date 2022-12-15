@@ -2,6 +2,7 @@ package reznikov.sergey.blog.services;
 
 import com.mysql.cj.util.StringUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -9,10 +10,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import reznikov.sergey.blog.DTO.UserDTO;
 import reznikov.sergey.blog.entities.User;
+import reznikov.sergey.blog.entities.enums.Role;
 import reznikov.sergey.blog.mappings.MappingUser;
 import reznikov.sergey.blog.repositories.UserRepository;
 
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -25,14 +27,14 @@ public class UserService implements UserDetailsService {
 
     private final MailSenderService mailSender;
 
-    public void registerUser(UserDTO userDTO) throws Exception {
+    public UserDTO registerUser(UserDTO userDTO) {
         User user = mappingUser.mapToUserEntity(userDTO);
 
         if (user.getPassword() == null || user.getUsername() == null || user.getRoles().size() == 0) {
-            throw new Exception("Данные неполные");
+            return null;
         }
         if (userRepo.existsByUsername(user.getUsername())) {
-            throw new Exception("Пользователь с данным логином уже существует");
+            return null;
         }
         user.setActivationCode(UUID.randomUUID().toString());
 
@@ -48,7 +50,7 @@ public class UserService implements UserDetailsService {
         }
 
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepo.save(user);
+        return mappingUser.mapToUserDto(userRepo.save(user));
     }
 
 
@@ -65,19 +67,32 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public void updateUser(UserDTO userDTO) throws Exception {
+    public UserDTO updateUser(UserDTO userDTO) {
         User user = userRepo.findUserById(userDTO.getId()).orElse(null);
         if (user == null) {
-            throw new Exception("Пользователь с таким id не найден");
+            return null;
         }
 
         if (userDTO.getPassword() != null) {
             user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
-        } else if (userDTO.getUsername() != null) {
+        }
+        if (userDTO.getUsername() != null) {
             user.setUsername(userDTO.getUsername());
         }
 
-        userRepo.save(user);
+        return mappingUser.mapToUserDto(userRepo.save(user));
+    }
+
+
+    public void deleteUser(UserDTO userDTO){
+        if(userDTO.getId() == null){
+            return;
+        }
+        User user = userRepo.findUserById(userDTO.getId()).orElse(null);
+        if (user == null) {
+            return;
+        }
+        userRepo.delete(user);
     }
 
 
@@ -96,5 +111,25 @@ public class UserService implements UserDetailsService {
             return null;
         }
         return mappingUser.mapToUserDto(user);
+    }
+
+    public List<UserDTO> findUsersByRole (Pageable pageable, Collection<Role> roles) {
+        return userRepo.findUsersByRolesIsIn(new HashSet<>(roles), pageable)
+                .getContent()
+                .stream()
+                .map(mappingUser::mapToUserDto)
+                .toList();
+    }
+
+    public List<UserDTO> findUsersByRoleAndSearch(Pageable pageable,
+                                                  Collection<Role> roles,
+                                                  String search) {
+        return userRepo.findUsersByRolesIsInAndUsernameContainsIgnoreCase(
+                new HashSet<>(roles), search, pageable)
+                .getContent()
+                .stream()
+                .map(mappingUser::mapToUserDto)
+                .toList();
+
     }
 }

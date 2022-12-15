@@ -27,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers("/registration", "/login", "/logout", "/error", "/activate/**").permitAll()
-                .antMatchers("/static/**", "/**.js").permitAll()
+                .antMatchers("/static/**", "/**.js", "/public/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -43,14 +43,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web.ignoring()
                 .antMatchers("/static/**",
-                        "static/account/**");
+                        "static/account/**", "/public/**");
     }
-
-
 
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(bCryptPasswordEncoder);
+        auth
+            .userDetailsService(userDetailsService)
+            .passwordEncoder(bCryptPasswordEncoder);
     }
 }
