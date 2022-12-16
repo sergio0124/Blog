@@ -82,7 +82,7 @@ public class CreatorPostController {
         try {
             postImageService.savePostImagesByPost(images, postDTO);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Не удалось сохранить изображения");
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
 
         return ResponseEntity.ok("Изменения сохранены в базе данных");

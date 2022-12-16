@@ -1,4 +1,7 @@
 function delete_post(id, element){
+    if (!confirm("Хотите ли вы окончательно удалить пост?")) {
+        return;
+    }
     let data = {
         "id": id
     };

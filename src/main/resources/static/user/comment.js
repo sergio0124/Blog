@@ -102,6 +102,9 @@ function update_comment(element, commentId) {
 
 
 function delete_comment(element, commentId) {
+    if (!confirm("Уверены, что хотите удалить комментарий?")) {
+        return;
+    }
     let data = {
         "id": commentId
     };

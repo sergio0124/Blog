@@ -36,17 +36,21 @@ public class UserService implements UserDetailsService {
         if (userRepo.existsByUsername(user.getUsername())) {
             return null;
         }
-        user.setActivationCode(UUID.randomUUID().toString());
 
-        if (!StringUtils.isNullOrEmpty(user.getMail())) {
-            String message = String.format(
-                    "Hello, %s! \n" +
-                            "Welcome to Blog. Please, visit next link: http://localhost:8080/activate/%s",
-                    user.getUsername(),
-                    user.getActivationCode()
-            );
+        if (userDTO.getMail() != null) {
+            user.setActivationCode(UUID.randomUUID().toString());
+            if (!StringUtils.isNullOrEmpty(user.getMail())) {
+                String message = String.format(
+                        "Hello, %s! \n" +
+                                "Welcome to Blog. Please, visit next link: http://localhost:8080/activate/%s",
+                        user.getUsername(),
+                        user.getActivationCode()
+                );
 
-            mailSender.send(user.getMail(), "Activation code", message);
+                mailSender.send(user.getMail(), "Activation code", message);
+            }
+        } else {
+            user.setActive(true);
         }
 
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -84,8 +88,8 @@ public class UserService implements UserDetailsService {
     }
 
 
-    public void deleteUser(UserDTO userDTO){
-        if(userDTO.getId() == null){
+    public void deleteUser(UserDTO userDTO) {
+        if (userDTO.getId() == null) {
             return;
         }
         User user = userRepo.findUserById(userDTO.getId()).orElse(null);
@@ -105,7 +109,7 @@ public class UserService implements UserDetailsService {
         return mappingUser.mapToUserDto(userRepo.findByUsername(username).orElse(null));
     }
 
-    public UserDTO loadUserById(Long userId)  {
+    public UserDTO loadUserById(Long userId) {
         User user = userRepo.findUserById(userId).orElse(null);
         if (user == null) {
             return null;
@@ -113,7 +117,7 @@ public class UserService implements UserDetailsService {
         return mappingUser.mapToUserDto(user);
     }
 
-    public List<UserDTO> findUsersByRole (Pageable pageable, Collection<Role> roles) {
+    public List<UserDTO> findUsersByRole(Pageable pageable, Collection<Role> roles) {
         return userRepo.findUsersByRolesIsIn(new HashSet<>(roles), pageable)
                 .getContent()
                 .stream()
@@ -125,11 +129,20 @@ public class UserService implements UserDetailsService {
                                                   Collection<Role> roles,
                                                   String search) {
         return userRepo.findUsersByRolesIsInAndUsernameContainsIgnoreCase(
-                new HashSet<>(roles), search, pageable)
+                        new HashSet<>(roles), search, pageable)
                 .getContent()
                 .stream()
                 .map(mappingUser::mapToUserDto)
                 .toList();
 
+    }
+
+    public void blockUser(UserDTO user) {
+        User curUser = userRepo.findUserById(user.getId()).orElse(null);
+        if (curUser == null) {
+            return;
+        }
+        curUser.setNonLocked(false);
+        userRepo.save(curUser);
     }
 }

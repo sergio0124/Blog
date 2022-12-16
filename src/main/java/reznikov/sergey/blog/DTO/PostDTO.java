@@ -21,6 +21,10 @@ public class PostDTO extends BaseEntityDTO {
 
     private String text;
 
+    private Long reportCount;
+
+    private String reportType;
+
     List<CommentDTO> comments = new ArrayList<>();
 
     private int likesCount;

@@ -45,21 +45,14 @@ public class PostImageService {
                         .filter(rec -> postImageDTOList
                                 .stream()
                                 .noneMatch(p -> Objects.equals(p.getId(), rec.getId()))).toList();
+        imagesForDeleting
+                .forEach(rec->postImageRepository
+                        .delete(mappingPostImage
+                                .mapToPostImageEntity(rec)));
 
-        Post post = postRepository.findById(postDTO.getId()).orElse(null);
-        if (post == null) {
-            return;
-        }
-        post.setPostImages(new ArrayList<>(post.getPostImages()));
-
-        for (var img : imagesForDeleting) {
-            post.getPostImages().removeIf(rec -> rec.getId() == img.getId());
-            postImageRepository.deleteById(img.getId());
-        }
-
-        post.getPostImages().addAll(postImageDTOList.stream().filter(rec -> rec.getId() == null)
-                .map(mappingPostImage::mapToPostImageEntity).toList());
-
-        postRepository.save(post);
+        postImageRepository.saveAll(postImageDTOList
+                .stream()
+                .map(mappingPostImage::mapToPostImageEntity)
+                .collect(Collectors.toList()));
     }
 }

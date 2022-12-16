@@ -8,6 +8,8 @@ import reznikov.sergey.blog.entities.enums.ReportType;
 import reznikov.sergey.blog.mappings.MappingReport;
 import reznikov.sergey.blog.repositories.ReportRepository;
 
+import javax.transaction.Transactional;
+
 @Service
 @RequiredArgsConstructor
 public class ReportService {
@@ -26,5 +28,19 @@ public class ReportService {
         return mappingReport
                 .mapToAppointmentDto(reportRepository
                         .save(report));
+    }
+
+
+    public Long getReportCount(Long postId) {
+        return reportRepository.countReportsByPost_Id(postId);
+    }
+
+    public ReportType getReportType(Long postId) {
+        return reportRepository.getReportTypeToPost(postId);
+    }
+
+    @Transactional
+    public void deleteReportsByPostId(Long postId) {
+        reportRepository.deleteReportsByPost_Id(postId);
     }
 }

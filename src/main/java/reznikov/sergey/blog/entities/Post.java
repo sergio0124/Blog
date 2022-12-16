@@ -45,12 +45,12 @@ public class Post extends BaseEntity {
     List<Like> likes = new ArrayList<>();
 
     @OneToMany(mappedBy = "post",
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.REMOVE,
             fetch = FetchType.LAZY)
     List<Report> reports = new ArrayList<>();
 
     @OneToMany(mappedBy = "post",
-            cascade = CascadeType.ALL,
+            cascade = CascadeType.REMOVE,
             fetch = FetchType.LAZY)
     List<PostImage> postImages = new ArrayList<>();
 }
