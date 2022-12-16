@@ -11,7 +11,7 @@
 <body>
 
 <div style="margin-bottom: 20px">
-    <img onclick="window.location.href = '/'" src="../static/image/blog.png" alt="">
+    <img onclick="window.location.href = '/'" src="../public/blog.png" alt="">
     <label>Пользователь ${user.username}</label>
     <button onclick="document.location.href = '/info'">Информация об аккаунте</button>
     <button onclick="document.location.href = '/logout'">Выйти из аккаунта</button>

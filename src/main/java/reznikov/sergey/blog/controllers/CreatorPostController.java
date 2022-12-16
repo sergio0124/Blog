@@ -50,6 +50,7 @@ public class CreatorPostController {
     String getCreatePage(@RequestParam(required = false) Long postId,
                          HashMap<String, Object> model,
                          @AuthenticationPrincipal User user) {
+        model.put("user", mappingUser.mapToUserDto(user));
         if (postId == null) {
             return "creator/post_work_window";
         }
@@ -61,7 +62,6 @@ public class CreatorPostController {
 
         postDTO.setPostImages(postImageService.findPostImagesByPost(postDTO));
         model.put("post", postDTO);
-        model.put("user", mappingUser.mapToUserDto(user));
 
         return "creator/post_work_window";
     }
