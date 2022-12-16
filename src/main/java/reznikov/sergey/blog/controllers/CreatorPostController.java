@@ -20,9 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-@PreAuthorize("hasAnyAuthority('CREATOR')")
 @Controller
-@RequestMapping("/creator")
 @RequiredArgsConstructor
 public class CreatorPostController {
 
@@ -32,7 +30,7 @@ public class CreatorPostController {
     private final PostImageService postImageService;
 
 
-    @GetMapping
+    @GetMapping("creator/")
     String creatorMainPage(@RequestParam(value = "page", required = false) Optional<Integer> pageNumber,
                            @AuthenticationPrincipal User user,
                            HashMap<String, Object> model) {
@@ -48,9 +46,10 @@ public class CreatorPostController {
     }
 
 
-    @GetMapping("/work_on_post")
+    @GetMapping("creator/work_on_post")
     String getCreatePage(@RequestParam(required = false) Long postId,
-                         HashMap<String, Object> model) {
+                         HashMap<String, Object> model,
+                         @AuthenticationPrincipal User user) {
         if (postId == null) {
             return "creator/post_work_window";
         }
@@ -62,12 +61,13 @@ public class CreatorPostController {
 
         postDTO.setPostImages(postImageService.findPostImagesByPost(postDTO));
         model.put("post", postDTO);
+        model.put("user", mappingUser.mapToUserDto(user));
 
         return "creator/post_work_window";
     }
 
 
-    @PostMapping("/save_post")
+    @PostMapping("creator/save_post")
     ResponseEntity<Object> creatorNewPage(@RequestBody PostDTO postDTO,
                                           @AuthenticationPrincipal User user) {
         postDTO.setUser(mappingUser.mapToUserDto(user));
@@ -89,7 +89,7 @@ public class CreatorPostController {
     }
 
 
-    @DeleteMapping("/delete_post")
+    @DeleteMapping("creator/delete_post")
     ResponseEntity<Object> delete_post(@AuthenticationPrincipal User user,
                                        @RequestBody PostDTO postDTO) {
         UserDTO userDTO = mappingUser.mapToUserDto(user);

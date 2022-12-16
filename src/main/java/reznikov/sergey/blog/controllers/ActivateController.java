@@ -16,7 +16,6 @@ import java.util.HashMap;
 
 @Controller
 @RequiredArgsConstructor
-@RequestMapping("activate/")
 public class ActivateController {
 
     private final UserService userService;
@@ -24,7 +23,7 @@ public class ActivateController {
     private final ScheduledService scheduledService;
 
 
-    @GetMapping("{code}")
+    @GetMapping("activate/{code}")
     public String activate(Model model, @PathVariable String code) {
         boolean isActivated = userService.activateUser(code);
 
@@ -38,7 +37,7 @@ public class ActivateController {
     }
 
 
-    @GetMapping("recover_password")
+    @GetMapping("activate/recover_password")
     public String recover(HashMap<String, Object> model,
                           @RequestParam(required = false) String login) {
         if (login != null) {
@@ -71,7 +70,7 @@ public class ActivateController {
         return "account/recover_password_login";
     }
 
-    @GetMapping("recover_password/{code}")
+    @GetMapping("activate/recover_password/{code}")
     public String recoverPassword(@PathVariable String code,
                                   HashMap<String, Object> model) {
         if (!scheduledService.isCodeExists(code)) {
@@ -81,7 +80,7 @@ public class ActivateController {
     }
 
 
-    @PostMapping("recover_password/{code}")
+    @PostMapping("activate/recover_password/{code}")
     public ResponseEntity<Object> recoverPasswordPost(@PathVariable String code,
                                                       @RequestBody UserDTO userDTO,
                                                       HashMap<String, Object> model) {

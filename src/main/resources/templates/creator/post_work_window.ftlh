@@ -2,12 +2,20 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Создание поста</title>
-    <script src="create_new_post.js"></script>
+    <script src="/creator/create_new_post.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
 
 <div>
+
+    <div style="margin-bottom: 20px">
+        <img onclick="window.location.href = '/'" src="../static/image/blog.png" alt="">
+        <label>Пользователь ${user.username}</label>
+        <button onclick="document.location.href = '/info'">Информация об аккаунте</button>
+        <button onclick="document.location.href = '/logout'">Выйти из аккаунта</button>
+    </div>
+    <hr/>
 
     <#if post??>
         <div id="post_id" style="display: none">${post.id}</div>

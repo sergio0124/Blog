@@ -16,9 +16,7 @@ import reznikov.sergey.blog.services.*;
 
 import java.util.*;
 
-@PreAuthorize("hasAnyAuthority('USER')")
 @Controller
-@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserPostController {
     int PAGE_SIZE = 5;
@@ -34,7 +32,7 @@ public class UserPostController {
 
     private final ReportService reportService;
 
-    @GetMapping
+    @GetMapping("user/")
     String getHomePage(@RequestParam(value = "page", required = false) Optional<Integer> pageNumber,
                        @AuthenticationPrincipal User user,
                        HashMap<String, Object> model) throws Exception {
@@ -55,10 +53,11 @@ public class UserPostController {
     }
 
 
-    @GetMapping("/search")
+    @GetMapping("user/search")
     String getSearchPage(@RequestParam("searchRequest") String searchRequest,
                          @RequestParam(value = "page", required = false) Optional<Integer> pageNumber,
-                         HashMap<String, Object> model) {
+                         HashMap<String, Object> model,
+                         @AuthenticationPrincipal User user) {
 
         int page = pageNumber.orElse(0);
         PageRequest pageRequest =
@@ -67,11 +66,12 @@ public class UserPostController {
         List<PostDTO> posts = postService.searchPostsByTitle(searchRequest, pageRequest);
 
         model.put("posts", posts);
+        model.put("user", mappingUser.mapToUserDto(user));
         return "user/user_search_page";
     }
 
 
-    @GetMapping("/read_post")
+    @GetMapping("user/read_post")
     String readPost(@RequestParam("postId") Long postId,
                     @AuthenticationPrincipal User user,
                     HashMap<String, Object> model) throws Exception {
@@ -97,7 +97,7 @@ public class UserPostController {
     }
 
 
-    @PostMapping("/load_comments")
+    @PostMapping("user/load_comments")
     ResponseEntity<Object> getMoreComments(@RequestBody Integer page,
                                            @RequestBody Long postId) throws Exception {
         PostDTO postDTO = new PostDTO();
@@ -109,7 +109,7 @@ public class UserPostController {
     }
 
 
-    @PostMapping("/like")
+    @PostMapping("user/like")
     ResponseEntity<Object> updateLike(
             @RequestBody PostDTO postDTO,
             @AuthenticationPrincipal User user) {
@@ -122,7 +122,7 @@ public class UserPostController {
     }
 
 
-    @GetMapping("check_creator")
+    @GetMapping("user/check_creator")
     String getUserPage(
             @RequestParam("userId") Long userId,
             @RequestParam(value = "page", required = false) Optional<Integer> pageNumber,
@@ -145,7 +145,7 @@ public class UserPostController {
     }
 
 
-    @PostMapping("/subscribe")
+    @PostMapping("user/subscribe")
     ResponseEntity<Object> subscribe(@RequestBody UserDTO userDTO,
                                      @AuthenticationPrincipal User user) {
 
@@ -158,7 +158,7 @@ public class UserPostController {
     }
 
 
-    @PostMapping("/save_comment")
+    @PostMapping("user/save_comment")
     ResponseEntity<Object> saveComment(@AuthenticationPrincipal User user,
                                        @RequestBody CommentDTO commentDTO) {
 
@@ -174,7 +174,7 @@ public class UserPostController {
     }
 
 
-    @PostMapping("/delete_comment")
+    @PostMapping("user/delete_comment")
     ResponseEntity<Object> deleteComment(@AuthenticationPrincipal User user,
                                          @RequestBody CommentDTO commentDTO) {
 
@@ -190,9 +190,10 @@ public class UserPostController {
     }
 
 
-    @GetMapping("/report_post/{postId}")
+    @GetMapping("user/report_post/{postId}")
     private String getRepostPage(@PathVariable Long postId,
-                                 Map<String, Object> model) {
+                                 Map<String, Object> model,
+                                 @AuthenticationPrincipal User user) {
         PostDTO postDTO = postService.findPostById(postId);
         if (postDTO == null) {
             model.put("message", "Пост не найден");
@@ -204,11 +205,12 @@ public class UserPostController {
                     .toList();
             model.put("reportTypes", reportTypes);
         }
+        model.put("user", mappingUser.mapToUserDto(user));
         return "user/report_post";
     }
 
 
-    @PostMapping("/report_post/{postId}")
+    @PostMapping("user/report_post/{postId}")
     private ResponseEntity<Object> saveReport(@RequestBody ReportDTO reportDTO,
                                               @AuthenticationPrincipal User user,
                                               @PathVariable Long postId) {

@@ -4,9 +4,19 @@
     <meta charset="UTF-8">
     <title>Оценка поста</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <script src="ban.js"></script>
+    <script src="/admin/ban.js"></script>
 </head>
 <body>
+
+
+<div style="margin-bottom: 20px">
+    <img onclick="window.location.href = '/'" src="../static/image/blog.png" alt="">
+    <label>Пользователь ${user.username}</label>
+    <button onclick="document.location.href = '/info'">Информация об аккаунте</button>
+    <button onclick="document.location.href = '/logout'">Выйти из аккаунта</button>
+</div>
+<hr/>
+
 
 <#if message??>
     <div>${message}</div>

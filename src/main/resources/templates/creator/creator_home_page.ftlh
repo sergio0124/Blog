@@ -2,17 +2,22 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Главная страница редактора</title>
-    <script src="pages.js"></script>
-    <script src="refactor_post.js"></script>
-    <script src="delete.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="/pages.js"></script>
+    <script src="/creator/refactor_post.js"></script>
+    <script src="/creator/delete.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
 
-<div>
-    <div>Пользователь ${user.username}</div>
+<div style="margin-bottom: 20px">
+    <img onclick="window.location.href = '/'" src="../static/image/blog.png" alt="">
+    <label>Пользователь ${user.username}</label>
     <button onclick="document.location.href = '/info'">Информация об аккаунте</button>
+    <button onclick="document.location.href = '/logout'">Выйти из аккаунта</button>
 </div>
+<hr/>
+
 
 <div>
     <button onclick="document.location.href = '/creator/work_on_post'">Добавить пост</button>

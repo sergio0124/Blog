@@ -25,8 +25,6 @@ import java.util.Map;
 import java.util.Optional;
 
 @Controller
-@PreAuthorize("ADMIN")
-@RequestMapping("/admin")
 @RequiredArgsConstructor
 public class AdminController {
     private static final int PAGE_SIZE = 10;
@@ -37,20 +35,23 @@ public class AdminController {
     private final PostService postService;
     private final ReportService reportService;
 
-    @GetMapping("/")
+    @GetMapping("/admin/")
     private String getHomePage(Map<String, Object> model,
-                               @RequestParam(value = "page", required = false) Optional<Integer> pageNumber) {
+                               @RequestParam(value = "page", required = false) Optional<Integer> pageNumber,
+                               @AuthenticationPrincipal User user) {
         int page = pageNumber.orElse(0);
         Pageable pageable = PageRequest.of(page, PAGE_SIZE);
         List<PostDTO> posts = postService.getMostReportedPosts(pageable);
         model.put("posts", posts);
         model.put("page", page);
+        model.put("user", mappingUser.mapToUserDto(user));
         return "admin_home_page";
     }
 
-    @GetMapping("/check_post")
+    @GetMapping("/admin/check_post")
     private String getCheckPostImage(Map<String, Object> model,
-                                     @RequestParam Long postId) {
+                                     @RequestParam Long postId,
+                                     @AuthenticationPrincipal User user) {
         PostDTO postDTO = postService.findPostById(postId);
         if (postDTO == null) {
             model.put("message", "Пост с таким id не найден");
@@ -60,11 +61,12 @@ public class AdminController {
         postDTO.setReportType(ReportType.getInRussian(reportService.getReportType(postId)));
         postDTO.setPostImages(postImageService.findPostImagesByPost(postDTO));
         model.put("post", postDTO);
+        model.put("user", mappingUser.mapToUserDto(user));
         return "check_post";
     }
 
 
-    @PostMapping("delete_post/{postId}")
+    @PostMapping("/admin/delete_post/{postId}")
     private ResponseEntity<Object> deletePost(@PathVariable Long postId,
                                               @AuthenticationPrincipal User user) {
         PostDTO postDTO = postService.findPostById(postId);
@@ -80,7 +82,7 @@ public class AdminController {
     }
 
 
-    @PostMapping("justify_post/{postId}")
+    @PostMapping("/admin/justify_post/{postId}")
     private ResponseEntity<Object> justifyPost(@PathVariable Long postId) {
         if (postService.findPostById(postId) == null) {
             return ResponseEntity.badRequest().body("Пост с таким id не найден");
@@ -90,7 +92,7 @@ public class AdminController {
     }
 
 
-    @PostMapping("block_user/{postId}")
+    @PostMapping("/admin/block_user/{postId}")
     private ResponseEntity<Object> blockUser(@PathVariable Long postId) {
         PostDTO postDTO = postService.findPostById(postId);
         if (postDTO == null) {

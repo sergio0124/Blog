@@ -3,15 +3,19 @@
 <head>
     <title>Поиск</title>
 
-    <script src="read_post.js"></script>
-    <script src="search.js"></script>
+    <script src="/user/read_post.js"></script>
+    <script src="/user/search.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
 <body>
 
-<div>
-    <button onclick="document.location.href = '/user/info'">Информация об аккаунте</button>
+<div style="margin-bottom: 20px">
+    <img onclick="window.location.href = '/'" src="../static/image/blog.png" alt="">
+    <label>Пользователь ${user.username}</label>
+    <button onclick="document.location.href = '/info'">Информация об аккаунте</button>
+    <button onclick="document.location.href = '/logout'">Выйти из аккаунта</button>
 </div>
+<hr/>
 
 <div>
     <label for="search">Поиск: </label><input type="text" id="search_input">
